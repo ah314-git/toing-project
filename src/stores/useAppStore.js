@@ -1,13 +1,45 @@
 import { create } from "zustand"
+import { toDay } from "../utils/date";
 
-// 오늘 날짜 계산
-const today = new Date()
-const year = today.getFullYear()
-const month = String(today.getMonth() + 1).padStart(2, "0")
-const day = String(today.getDate()).padStart(2, "0")
-const formattedToday = `${year}-${month}-${day}`
+const today = toDay(new Date());
 
-export const useAppStore = create((set) => ({
-    selectedDate: formattedToday,
+export const useAppStore = create((set, get) => ({
+    selectedDate: today,
+    todosByDate: {},
     setSelectedDate: (date) => set({ selectedDate: date }),
-}))
+
+    //todo add
+    addTodo: (date, text) => {
+        if (!text || !text.trim()) return;
+        const id = Date.now().toString();
+        set((state) => {
+            const list = state.todosByDate[date] ? [...state.todosByDate[date]] : [];
+            list.push({ id, text: text.trim(), done: false });
+            return { todosByDate: { ...state.todosByDate, [date]: list } };
+        });
+    },
+
+    toggleTodoDone: (date, id) => {
+        set((state) => {
+            const list = state.todosByDate[date]?.map(t => t.id === id ? { ...t, done: !t.done } : t) || [];
+            return { todosByDate: { ...state.todosByDate, [date]: list } };
+        });
+    },
+
+    editTodo: (date, id, newText) => {
+        set((state) => {
+            const list = state.todosByDate[date]?.map(t => t.id === id ? { ...t, text: newText } : t) || [];
+            return { todosByDate: { ...state.todosByDate, [date]: list } };
+        });
+    },
+
+    deleteTodo: (date, id) => {
+        set((state) => {
+            const list = state.todosByDate[date]?.filter(t => t.id !== id) || [];
+            const copy = { ...state.todosByDate, [date]: list };
+            // optionally remove empty key:
+            if (list.length === 0) delete copy[date];
+            return { todosByDate: copy };
+        });
+    }
+}));
