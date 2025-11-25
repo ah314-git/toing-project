@@ -15,19 +15,36 @@ import { toDay } from "../utils/date";
 const CalendarWrapper = styled.div`
   background-color: #fff;
   width: 320px;
-  height: 320px;
   padding: 10px;
   margin: 10px;
 
+  .react-calendar {
+    width: 100%;
+    border: none;
+  }
+  .react-calendar__tile {
+    height: 50px;          /* 원하는 고정 높이 */
+    max-height: 50px;      /* 최대 높이 고정 */
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
 `;
+
 
 const Dot = styled.span`
   display: inline-block;
   width: 6px;
   height: 6px;
-  background: #6ba9ff;
+  background: #2d85ffff;
   border-radius: 50%;
+
   margin-top: 4px;
+  margin-left: 2px;
+  &:first-child {
+    margin-left: 0;    /* 첫 번째 dot은 margin 없게 */
+  }
 `;
 
 const CalendarStyle = createGlobalStyle`
@@ -39,7 +56,7 @@ const CalendarStyle = createGlobalStyle`
 
   /* 선택된 날짜 */
   .react-calendar__tile--active {
-    background-color: #4cafff !important;
+    background-color: #8acaffff !important;
     color: white !important;
   }
 
@@ -64,7 +81,15 @@ export default function MyCalendar() {
               const key = toDay(date);
               const list = todosByDate[key];
               if (list && list.length > 0) {
-                return <Dot />;
+                // 최대 3개의 점만 표시
+                const dotCount = Math.min(list.length, 3);
+                return (
+                  <div style={{ display: "flex", justifyContent: "center", marginTop: 4 }}>
+                    {Array.from({ length: dotCount }).map((_, i) => (
+                      <Dot key={i} />
+                    ))}
+                  </div>
+                );
               }
             }
             return null;

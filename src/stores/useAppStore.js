@@ -37,9 +37,19 @@ export const useAppStore = create((set, get) => ({
         set((state) => {
             const list = state.todosByDate[date]?.filter(t => t.id !== id) || [];
             const copy = { ...state.todosByDate, [date]: list };
-            // optionally remove empty key:
             if (list.length === 0) delete copy[date];
             return { todosByDate: copy };
         });
+    },
+
+    setTodosForDate: (date, newList) => {
+        set((state) => ({
+            todosByDate: {
+                ...state.todosByDate,
+                [date]: newList
+            }
+        }));
     }
+
+
 }));
