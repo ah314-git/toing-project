@@ -137,56 +137,55 @@ export default function MyJournal() {
 
 /* AI 요약 */
 const handleAiSummary = async () => {
-    // 1. 현재 날짜의 사용자가 작성한 메시지들만 추출하여 문자열로 합칩니다.
-    const userMsgs = list
-        .filter(m => m.type === "user")
-        .map(m => m.text)
-        .reverse() // (선택적) 최신 메시지가 위에 오도록 순서를 뒤집음
-        .join("\n\n--- 분리 ---\n\n"); // 각 메시지를 명확히 구분하여 합침
+    // 1. 현재 대화 목록 (list)에서 가장 최근 AI 답변을 찾습니다.
+    // 'ai' 타입 메시지가 있는 경우, 그 이후의 메시지만 요약 대상으로 삼습니다.
+    const lastAiIndex = list.findLastIndex(m => m.type === "ai");
+
+    // 2. 서버로 보낼 메시지들을 필터링합니다.
+    const messagesToSend = list
+        // 마지막 AI 답변 다음 인덱스부터 시작하거나, AI 답변이 없으면 전체 메시지부터 시작
+        .slice(lastAiIndex + 1)
+        .filter(m => m.type === "user") // 오직 사용자가 보낸 메시지만 포함
+        .map(m => m.text); 
+
+    // 3. 메시지 순서를 AI가 이해하기 쉽도록 (최신 메시지가 먼저 오도록) 역순으로 합칩니다.
+    const userMsgs = messagesToSend.join("\n\n--- 분리 ---\n\n");
 
     if (!userMsgs) {
-        // 요약할 내용이 없을 때 AI 메시지로 알림
-        addMessage(dateKey, {
-            id: "system-" + Date.now().toString(),
-            text: "요약할 일기 기록이 없어요. 먼저 일상을 기록해주세요.",
-            time: formatTime(),
-            type: "ai" // 시스템 메시지도 AI 버블로 표시
-        });
-        return;
+        // 이미 답변이 완료된 상태거나, 요약할 새 메시지가 없는 경우
+        return; // 👈 3번 요구사항 반영: 메시지 출력 없이 조용히 종료
     }
 
     setIsAiLoading(true);
 
     try {
-        // 2. 서버 (4000번 포트)로 POST 요청 전송
         const res = await fetch("http://localhost:4000/api/summary", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
-            // 서버가 기대하는 'messages' 필드에 합친 문자열을 담아 전송
-            body: JSON.stringify({ messages: userMsgs })
+            body: JSON.stringify({ messages: userMsgs }) 
         });
 
         const data = await res.json();
         
-        // 3. 받은 응답을 채팅 목록에 추가
+        // 4. 서버 오류 시 응답 메시지 출력 없이 조용히 종료 (3번 요구사항 반영)
+        if (!res.ok) {
+            console.error("서버 응답 오류 (숨김):", data.text || "응답 없음");
+            return;
+        }
+
+        // 5. 받은 응답을 채팅 목록에 추가
         addMessage(dateKey, {
             id: "ai-" + Date.now().toString(),
-            // 서버에서 받은 'data.text' (요약 결과) 사용
             text: data.text || "AI가 응답을 생성하지 못했습니다.", 
             time: formatTime(),
             type: "ai"
         });
 
     } catch (err) {
-        console.error("AI Summary API Error:", err);
-        addMessage(dateKey, {
-            id: "error-" + Date.now().toString(),
-            text: "서버 연결 또는 통신 오류가 발생했습니다. Node.js 서버를 확인해주세요.",
-            time: formatTime(),
-            type: "ai"
-        });
+        console.error("AI Summary API Error (숨김):", err);
+        // 연결 오류 시에도 사용자에게 메시지 출력 없이 조용히 종료 (3번 요구사항 반영)
     } finally {
         setIsAiLoading(false);
     }
