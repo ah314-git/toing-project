@@ -1,0 +1,104 @@
+/* MyTodo.css */
+
+
+
+.todo-wrapper {
+    width: 95%;
+    margin: 20px;
+    background: #fff;
+    border: 2px solid #aaa;
+    border-radius: 8px;
+}
+
+.todo-list {
+    list-style: none;
+    padding: 16px;
+    margin: 0;
+}
+
+.item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 16px;
+    border-radius: 6px;
+}
+
+.item:hover {
+    background: #fafafa;
+}
+
+/* 체크박스 */
+.todo-checkbox {
+    appearance: none;
+    width: 24px;
+    height: 24px;
+    border: 2px solid #337AF7;
+    cursor: pointer;
+    position: relative;
+}
+
+.todo-checkbox:checked {
+    background-color: #337AF7;
+}
+
+.todo-checkbox:checked::after {
+    content: "✓";
+    color: white;
+    font-size: 16px;
+    position: absolute;
+    top: -1px;
+    left: 5px;
+}
+
+/* 텍스트 */
+.text {
+    margin-left: 8px;
+    flex: 1;
+}
+
+.text.done {
+    text-decoration: line-through;
+    color: #aaa;
+}
+
+/* 인라인 입력 필드 */
+.input-inline {
+    flex: 1;
+    margin: 16px;
+    padding: 10px;
+    outline: none;
+
+}
+
+/* 추가 버튼 */
+.add-button {
+    
+    width: 90%;
+    padding: 16px;
+    background: #f0f0f0;
+    border-radius: 16px;
+    border: 2px solid #999;
+    cursor: pointer;
+    font-size: 20px;
+    margin-bottom: 20px
+}
+
+/* 컨텍스트 메뉴 */
+.context-menu {
+    position: fixed;
+    background: #fff;
+    border: 1px solid #aaa;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.01);
+    z-index: 1000;
+    padding: 6px 10px;
+    
+}
+
+/* 메뉴 항목 */
+.context-menu div {
+    cursor: pointer;
+    padding: 6px;
+}
+
+

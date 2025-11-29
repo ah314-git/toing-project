@@ -1,0 +1,96 @@
+/* MyCalendar.css */
+
+
+.react-calendar__tile--now {
+    background-color: #fff !important;
+    color: #111 !important;
+}
+
+.react-calendar__tile--active {
+    background-color: #78CEF9 !important;
+    color: #fff !important;
+}
+
+
+
+.calendar-wrapper {
+    background-color: #fff;
+    width: 100%;
+    margin: 10px;
+}
+
+.calendar-wrapper .react-calendar {
+    width: 100%;
+    min-width: 360px;
+    border: none;
+    font-size: 24px;
+}
+
+.calendar-wrapper .react-calendar__tile {
+    height: 100px;
+    display: flex;
+    flex-direction: column;
+}
+
+
+
+/* 기본 캘린더 숨기기 */
+.calendar-wrapper .react-calendar__navigation {
+    display: none !important;
+}
+
+
+/* 커스텀 헤더 */
+.calendar-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.calendar-year-text {
+    font-size: 16px;
+    font-weight: 500;
+    color: #aaa;
+}
+
+
+.calendar-month-text {
+    font-size: 30px;
+    font-weight: 700;
+    color: #337AF7;
+}
+.calendar-month-row {
+    display: flex;
+    gap: 30px;
+    align-items: center;
+}
+
+
+.calendar-arrow {
+    border: none;
+    background: none;
+    font-size: 30px;
+    cursor: pointer;
+    color: #aaa;
+}
+
+
+
+.calendar-dot-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-top: 4px;
+    gap: 4px;
+}
+
+.calendar-dot {
+    width: 6px;
+    height: 6px;
+    background: #78CEF9;
+    border-radius: 50%;
+    margin-left: 2px;
+}
+.calendar-dot:first-child {
+    margin-left: 0;
+}

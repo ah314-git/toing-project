@@ -1,0 +1,157 @@
+/* Register.css */
+
+
+
+
+
+.register-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    width: 100%;
+    background-color: #fff;
+    padding: 20px;
+}
+
+.form-container {
+    width: 100%;
+    max-width: 500px;
+    background: #fff;
+    padding: 40px;
+}
+
+
+.input-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.input {
+    width: 100%;
+    height: 50px;
+    padding: 12px;
+    border: 1px solid #aaa;
+    border-radius: 10px;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+.input-group{
+    margin-bottom: 10px;
+}
+
+.input.invalid {
+    border-color: #ef4444;
+}
+
+.input:focus {
+    border-color: #3b82f6;
+    outline: none;
+}
+
+
+.validation-message {
+    font-size: 16px;
+    margin-top: 5px;
+    margin-bottom: 0;
+    color: #10b981;
+}
+
+.validation-message.invalid {
+    color: #ef4444;
+}
+
+/* 중복 확인 버튼 */
+.check-duplicate-button {
+    padding: 16px;
+    min-width: 100px;
+    border: none;
+    border-radius: 8px;
+    background-color: #3b82f6;
+    color: #fff;
+    cursor: pointer;
+}
+
+.check-duplicate-button:disabled {
+    background-color: #aaa;
+}
+
+
+/* 이용 약관 */
+.terms-section {
+    border: 1px solid #aaa;
+    border-radius: 6px;
+    padding: 20px;
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+.term-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-top: 1px solid #eee;
+    font-weight: normal;
+    color: #555;
+}
+
+.term-item.total {
+    border-top: none;
+    font-weight: bold;
+    color: #333;
+}
+
+.term-item label {
+    flex-grow: 1;
+    cursor: pointer;
+}
+
+.term-item input {
+    margin-left: 10px;
+    width: 20px;
+    height: 20px;
+}
+
+/* 가입 버튼 */
+.button {
+    width: 100%;
+    padding: 16px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    background: #3b82f6;
+    color: #fff;
+}
+.button:disabled {
+    background-color: #aaa;
+    color: #fff;
+}
+.back-button {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    background: none;
+    border: none;
+    font-size: 16px;
+    color: #3b82f6;
+    cursor: pointer;
+}
+
+
+
+
+.message {
+    text-align: center;
+    font-weight: 500;
+    margin-bottom: 15px;
+    color: #059669;
+}
+
+.message.invalid {
+    color: #ef4444;
+}
