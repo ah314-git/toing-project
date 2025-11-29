@@ -134,6 +134,15 @@ export const useAppStore = create((set, get) => ({
         return { fontFamily: state.fontList[nextIndex] };
     }),
 
+    fontSize: 16, // 기본 글씨 크기(px)
+    fontSizeList: [14, 16, 18, 20], // 순환할 글씨 크기 옵션
+    setFontSize: (size) => set({ fontSize: size }),
+    setNextFontSize: () => set((state) => {
+        const currentIndex = state.fontSizeList.indexOf(state.fontSize);
+        const nextIndex = (currentIndex + 1) % state.fontSizeList.length;
+        return { fontSize: state.fontSizeList[nextIndex] };
+    }),
+
 
 }));
 

@@ -10,7 +10,8 @@ export default function MyTodo() {
         toggleTodoDone,
         editTodo,
         deleteTodo,
-        fontFamily
+        fontFamily,
+        fontSize
     } = useAppStore();
 
     const [isAdding, setIsAdding] = useState(false);
@@ -84,7 +85,7 @@ export default function MyTodo() {
     };
 
     return (
-        <div className="todo-wrapper">
+        <div className="todo-wrapper" style={{ fontFamily, fontSize }}>
             <ul className="todo-list">
                 {list.map((item) => (
                     <li
@@ -95,6 +96,7 @@ export default function MyTodo() {
                         onDragStart={() => setDraggingId(item.id)}
                         onDragOver={(e) => handleDragOver(e, item)}
                         onDragEnd={() => setDraggingId(null)}
+                        style={{ fontFamily, fontSize }}
                     >
                         <div
                             style={{
@@ -102,7 +104,8 @@ export default function MyTodo() {
                                 alignItems: "center",
                                 flex: 1,
                                 cursor: "pointer",
-                                fontFamily // 폰트 적용
+                                fontFamily,
+                                fontSize
                             }}
                             onClick={() => toggleTodoDone(selectedDate, item.id)}
                         >
@@ -115,11 +118,12 @@ export default function MyTodo() {
                                     toggleTodoDone(selectedDate, item.id);
                                 }}
                                 onChange={() => { }}
+                                style={{ fontFamily, fontSize }}
                             />
                             {editingId === item.id ? (
                                 <input
                                     className="input-inline"
-                                    style={{ fontFamily }} // 폰트 적용
+                                    style={{ fontFamily, fontSize }}
                                     defaultValue={item.text}
                                     autoFocus
                                     onKeyDown={(e) => {
@@ -131,7 +135,7 @@ export default function MyTodo() {
                                     onBlur={() => setEditingId(null)}
                                 />
                             ) : (
-                                <span className={`text ${item.done ? "done" : ""}`} style={{ fontFamily }}>
+                                <span className={`text ${item.done ? "done" : ""}`} style={{ fontFamily, fontSize }}>
                                     {item.text}
                                 </span>
                             )}
@@ -141,32 +145,31 @@ export default function MyTodo() {
             </ul>
 
             {isAdding && (
-                <div className="input-inline" style={{ display: "flex", fontFamily }}>
+                <div className="input-inline" style={{ display: "flex", fontFamily, fontSize }}>
                     <input
                         ref={inputRef}
                         className="input-inline"
                         value={input}
-                        style={{ fontFamily }}
+                        style={{ fontFamily, fontSize }}
                         onChange={(e) => setInput(e.target.value)}
                         onKeyDown={handleAddEnter}
                     />
                 </div>
             )}
 
-            <div style={{ textAlign: "center" }}>
-                <button className="add-button" style={{ fontFamily }} onClick={handleAdd}>
+            <div style={{ textAlign: "center", fontFamily, fontSize }}>
+                <button className="add-button" style={{ fontFamily, fontSize }} onClick={handleAdd}>
                     할 일 추가
                 </button>
             </div>
 
-
             {menu && (
                 <div
                     className="context-menu"
-                    style={{ top: menu.y, left: menu.x }}
+                    style={{ top: menu.y, left: menu.x, fontFamily, fontSize }}
                 >
-                    <div onClick={() => handleEdit(menu.id)}>수정</div>
-                    <div onClick={() => handleDelete(menu.id)}>삭제</div>
+                    <div style={{ fontFamily, fontSize }} onClick={() => handleEdit(menu.id)}>수정</div>
+                    <div style={{ fontFamily, fontSize }} onClick={() => handleDelete(menu.id)}>삭제</div>
                 </div>
             )}
         </div>

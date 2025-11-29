@@ -21,7 +21,8 @@ export default function Setting() {
         startWeekDay, setStartWeekDay,
         timeFormat, setTimeFormat,
         showTime, toggleShowTime,
-        fontFamily, setFontFamily
+        fontFamily, setFontFamily,
+        fontSize, setFontSize
     } = useAppStore();
 
     const [openMenuId, setOpenMenuId] = useState(null);
@@ -101,6 +102,21 @@ export default function Setting() {
                                         {fontFamily}
                                     </button>
                                 )}
+
+                                {subItem === '크기' && (
+                                    <button
+                                        className="sub-item-btn"
+                                        onClick={() => {
+                                            const SIZES = [14, 16, 18, 20]; // 원하는 글씨 크기 배열
+                                            const currentIndex = SIZES.indexOf(fontSize);
+                                            const nextIndex = (currentIndex + 1) % SIZES.length;
+                                            setFontSize(SIZES[nextIndex]);
+                                        }}
+                                    >
+                                        {fontSize}px
+                                    </button>
+                                )}
+
 
                             </div>
                         ))}

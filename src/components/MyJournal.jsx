@@ -10,7 +10,8 @@ export default function MyJournal() {
         messagesByDate,
         timeFormat,
         showTime,
-        fontFamily
+        fontFamily,
+        fontSize
     } = useAppStore();
 
     const dateKey = toDay(selectedDate);
@@ -98,20 +99,20 @@ export default function MyJournal() {
     };
 
     return (
-        <div className="journal-wrapper" style={{ fontFamily }}>
+        <div className="journal-wrapper" style={{ fontFamily, fontSize }}>
             <div className="messages" ref={scrollRef}>
                 {list.map(m => (
-                    <div key={m.id} className={`message-row ${m.type}`}>
+                    <div key={m.id} className={`message-row ${m.type}`} style={{ fontFamily, fontSize }}>
                         {m.type === "user" && showTime && (
-                            <div className={`time user-time`} style={{ fontFamily }}>
+                            <div className={`time user-time`} style={{ fontFamily, fontSize }}>
                                 {formatTime(m.time)}
                             </div>
                         )}
-                        <div className={`bubble ${m.type}`} style={{ fontFamily }}>
+                        <div className={`bubble ${m.type}`} style={{ fontFamily, fontSize }}>
                             {m.text}
                         </div>
                         {m.type === "ai" && showTime && (
-                            <div className={`time ai-time`} style={{ fontFamily }}>
+                            <div className={`time ai-time`} style={{ fontFamily, fontSize }}>
                                 {formatTime(m.time)}
                             </div>
                         )}
@@ -119,7 +120,7 @@ export default function MyJournal() {
                 ))}
             </div>
 
-            <div className="input-area" style={{ fontFamily }}>
+            <div className="input-area" style={{ fontFamily, fontSize }}>
                 <textarea
                     ref={inputRef}
                     className="text-input"
@@ -127,15 +128,15 @@ export default function MyJournal() {
                     onChange={e => setText(e.target.value)}
                     onKeyDown={handleKeyDown}
                     placeholder="일상을 기록하세요"
-                    style={{ fontFamily }}
+                    style={{ fontFamily, fontSize }}
                 />
 
-                <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                <div style={{ display: "flex", flexDirection: "column", gap: 8, fontFamily, fontSize }}>
                     <button
                         className="btn secondary"
                         onClick={handleAiSummary}
                         disabled={isAiLoading}
-                        style={{ fontFamily }}
+                        style={{ fontFamily, fontSize }}
                     >
                         {isAiLoading ? "요약중..." : "AI 요약"}
                     </button>
@@ -143,7 +144,7 @@ export default function MyJournal() {
                         className="btn primary"
                         onClick={sendMessage}
                         disabled={text.trim().length === 0}
-                        style={{ fontFamily }}
+                        style={{ fontFamily, fontSize }}
                     >
                         전송
                     </button>
