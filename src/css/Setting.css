@@ -64,19 +64,31 @@
 }
 
 .sub-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     padding: 8px 0;
+    font-size: 16px;
+    color: #666;
+    
+}
+
+.sub-item:last-child {
+    border-bottom: none
+}
+
+.sub-item-btn {
+    border: none;
+    background: none;
     font-size: 16px;
     color: #666;
     cursor: pointer;
 }
 
-.sub-item:first-child {
-    border-top: none;
-}
-
-.sub-item:hover {
+.sub-item-btn:hover {
     color: #337AF7;
 }
+
 
 
 .arrow {

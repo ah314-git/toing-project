@@ -5,13 +5,13 @@ const today = toDay(new Date());
 
 export const useAppStore = create((set, get) => ({
 
-    selectedDate: today, 
+    selectedDate: today,
     todosByDate: {},
-    messagesByDate: {}, 
-    isSettingsOpen: false, 
+    messagesByDate: {},
+    isSettingsOpen: false,
     currentMainView: 'Home',
-    currentUserId: null,    
-    currentUsername: null,  
+    currentUserId: null,
+    currentUsername: null,
 
     setSelectedDate: (date) => set({ selectedDate: date }),
     toggleSettings: () => set((state) => ({ isSettingsOpen: !state.isSettingsOpen })),
@@ -30,11 +30,11 @@ export const useAppStore = create((set, get) => ({
     logout: () => set(() => ({
         currentUserId: null,
         currentUsername: null,
-        currentMainView: 'Login', 
+        currentMainView: 'Login',
         todosByDate: {},
         messagesByDate: {},
     })),
-    
+
     // -----------------------------
     // TODOLIST 액션
     // -----------------------------
@@ -42,7 +42,7 @@ export const useAppStore = create((set, get) => ({
         const value = text?.trim();
         if (!value) return;
         const id = Date.now().toString();
-        
+
         set((state) => {
             const prev = state.todosByDate[date] || [];
             const updated = [...prev, { id, text: value, done: false }];
@@ -109,4 +109,26 @@ export const useAppStore = create((set, get) => ({
             return { messagesByDate: next };
         });
     },
+
+
+    // -----------------------------
+    // SETTINGS 액션
+    // -----------------------------
+
+
+    startWeekDay: '일요일',
+    setStartWeekDay: (day) => set({ startWeekDay: day }),
+
+    timeFormat: '24h',
+    setTimeFormat: (format) => set({ timeFormat: format }),
+
+    showTime: true,
+    toggleShowTime: () => set((state) => ({ showTime: !state.showTime })),
+
+
+
+
 }));
+
+
+

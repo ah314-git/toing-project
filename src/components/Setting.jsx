@@ -12,22 +12,25 @@ const SETTINGS_MENU = [
 ];
 
 export default function Setting() {
-    const { isSettingsOpen, toggleSettings, setCurrentMainView } = useAppStore();
-    const [openMenuId, setOpenMenuId] = useState(null);
+    const {
+        isSettingsOpen,
+        toggleSettings,
+        setCurrentMainView,
 
+        //기본설정
+        startWeekDay,
+        setStartWeekDay,
+        timeFormat,
+        setTimeFormat,
+        showTime,
+        toggleShowTime
+
+    } = useAppStore();
+    const [openMenuId, setOpenMenuId] = useState(null);
     const handleMenuClick = (id) => {
         setOpenMenuId(openMenuId === id ? null : id);
     };
 
-    const handleSubItemClick = (id, subItem) => {
-        if (id === 'account' && subItem === '로그인/로그아웃') {
-            setCurrentMainView('Login');
-            toggleSettings();
-        } else {
-            alert(`${subItem} 설정 열기`);
-        }
-        setOpenMenuId(null);
-    };
 
     return (
         <div className={`setting-wrapper ${isSettingsOpen ? 'open' : ''}`}>
@@ -44,13 +47,48 @@ export default function Setting() {
                         )}
                     </div>
                     <div className={`sub-menu ${openMenuId === menu.id ? 'open' : ''}`}>
+
+
+
                         {menu.subItems.map((subItem) => (
-                            <div
-                                key={subItem}
-                                className="sub-item"
-                                onClick={() => handleSubItemClick(menu.id, subItem)}
-                            >
-                                {subItem}
+                            <div key={subItem} className="sub-item" >
+                                <span>{subItem}</span>
+
+
+                                {subItem === '시작 요일' && (
+                                    <button
+                                        className="sub-item-btn"
+                                        onClick={() => {
+                                            const newDay = startWeekDay === '일요일' ? '월요일' : '일요일';
+                                            setStartWeekDay(newDay);
+                                        }}
+                                    >
+                                        {startWeekDay}
+                                    </button>
+                                )}
+
+
+                                {subItem === '시간 형식' && (
+                                    <button
+                                        className="sub-item-btn"
+                                        onClick={() =>
+                                            setTimeFormat(timeFormat === '24h' ? '12h' : '24h')
+                                        }
+                                    >
+                                        {timeFormat}
+                                    </button>
+                                )}
+
+
+                                {subItem === '시간 표시' && (
+                                    <button
+                                        className="sub-item-btn"
+                                        onClick={toggleShowTime}
+                                    >
+                                        {showTime ? 'ON' : 'OFF'}
+                                    </button>
+                                )}
+
                             </div>
                         ))}
                     </div>

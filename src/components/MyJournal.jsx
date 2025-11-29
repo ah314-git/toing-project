@@ -4,9 +4,17 @@ import { toDay } from "../utils/date";
 import "../css/MyJournal.css";
 
 export default function MyJournal() {
-    const { selectedDate, addMessage, messagesByDate } = useAppStore();
+    const {
+        selectedDate,
+        addMessage,
+        messagesByDate,
+        timeFormat,
+        showTime
+    } = useAppStore();
+
     const dateKey = toDay(selectedDate);
     const list = messagesByDate?.[dateKey] || [];
+
     const [text, setText] = useState("");
     const [isAiLoading, setIsAiLoading] = useState(false);
     const scrollRef = useRef(null);
@@ -24,7 +32,7 @@ export default function MyJournal() {
         addMessage(dateKey, {
             id: Date.now().toString(),
             text: value,
-            time: formatTime(),
+            time: new Date(), // Date 객체로 저장
             type: "user"
         });
 
@@ -41,7 +49,10 @@ export default function MyJournal() {
 
     const handleAiSummary = async () => {
         const lastAiIndex = list.findLastIndex(m => m.type === "ai");
-        const messagesToSend = list.slice(lastAiIndex + 1).filter(m => m.type === "user").map(m => m.text);
+        const messagesToSend = list
+            .slice(lastAiIndex + 1)
+            .filter(m => m.type === "user")
+            .map(m => m.text);
         const userMsgs = messagesToSend.join("\n\n--- 분리 ---\n\n");
         if (!userMsgs) return;
 
@@ -62,7 +73,7 @@ export default function MyJournal() {
             addMessage(dateKey, {
                 id: "ai-" + Date.now().toString(),
                 text: data.text || "AI가 응답을 생성하지 못했습니다.",
-                time: formatTime(),
+                time: new Date(), // Date 객체로 저장
                 type: "ai"
             });
         } catch (err) {
@@ -72,16 +83,34 @@ export default function MyJournal() {
         }
     };
 
+    // 시간 포맷 함수
+    const formatTime = (time) => {
+        if (!time) return "";
+        const date = time instanceof Date ? time : new Date(time);
+        if (timeFormat === '12h') {
+            let hours = date.getHours();
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12 || 12;
+            return `${hours}:${String(date.getMinutes()).padStart(2, '0')} ${ampm}`;
+        } else {
+            return `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
+        }
+    };
+
+
     return (
         <div className="journal-wrapper">
             <div className="messages" ref={scrollRef}>
                 {list.map(m => (
                     <div key={m.id} className={`message-row ${m.type}`}>
-                        {m.type === "user" && <div className={`time ${m.type}`}>{m.time}</div>}
+                        {m.type === "user" && showTime && (
+                            <div className={`time user-time`}>{formatTime(m.time)}</div>
+                        )}
                         <div className={`bubble ${m.type}`}>{m.text}</div>
-                        {m.type === "ai" && <div className={`time ${m.type}`}>{m.time}</div>}
+                        {m.type === "ai" && showTime && (
+                            <div className={`time ai-time`}>{formatTime(m.time)}</div>
+                        )}
                     </div>
-
                 ))}
             </div>
 
@@ -96,19 +125,22 @@ export default function MyJournal() {
                 />
 
                 <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                    <button className="btn secondary" onClick={handleAiSummary} disabled={isAiLoading}>
+                    <button
+                        className="btn secondary"
+                        onClick={handleAiSummary}
+                        disabled={isAiLoading}
+                    >
                         {isAiLoading ? "요약중..." : "AI 요약"}
                     </button>
-                    <button className="btn primary" onClick={sendMessage} disabled={text.trim().length === 0}>
+                    <button
+                        className="btn primary"
+                        onClick={sendMessage}
+                        disabled={text.trim().length === 0}
+                    >
                         전송
                     </button>
                 </div>
             </div>
         </div>
     );
-}
-
-// 유틸리티 함수
-function formatTime(date = new Date()) {
-    return `${String(date.getHours()).padStart(2, "0")}:${String(date.getMinutes()).padStart(2, "0")}`;
 }

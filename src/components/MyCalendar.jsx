@@ -1,7 +1,7 @@
 /* MyCalendar.jsx */
 
 import React, { useMemo } from "react";
-import CalendarLib from "react-calendar";
+import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import { useAppStore } from "../stores/useAppStore";
 import { toDay } from "../utils/date";
@@ -13,7 +13,7 @@ function Dot() {
 }
 
 export default function MyCalendar() {
-    const { selectedDate, setSelectedDate, todosByDate } = useAppStore();
+    const { selectedDate, setSelectedDate, todosByDate, startWeekDay } = useAppStore();
     const dateObj = useMemo(
         () => new Date(selectedDate || new Date()),
         [selectedDate]
@@ -76,13 +76,16 @@ export default function MyCalendar() {
             </div>
 
             {/* 캘린더 */}
-            <CalendarLib
+            <Calendar
                 onChange={(date) => setSelectedDate(toDay(date))}
                 value={dateObj}
                 activeStartDate={dateObj}
                 formatDay={(locale, date) => date.getDate()}
                 tileContent={tileContent}
+                locale={startWeekDay === '일요일' ? "en-US" : "en-GB"}
             />
         </div>
+        
     );
+
 }
