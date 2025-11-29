@@ -125,7 +125,14 @@ export const useAppStore = create((set, get) => ({
     showTime: true,
     toggleShowTime: () => set((state) => ({ showTime: !state.showTime })),
 
-
+    fontFamily: 'Arial',
+    fontList: ['Arial', '나눔고딕', '나눔손글씨장미체', '휴먼편지체'],
+    setFontFamily: (font) => set({ fontFamily: font }),
+    setNextFont: () => set((state) => {
+        const currentIndex = state.fontList.indexOf(state.fontFamily);
+        const nextIndex = (currentIndex + 1) % state.fontList.length;
+        return { fontFamily: state.fontList[nextIndex] };
+    }),
 
 
 }));

@@ -4,15 +4,14 @@ import React from "react";
 import { useAppStore } from "../stores/useAppStore";
 import "../css/Header.css";
 
-
-
 export default function Header() {
     const { 
         toggleSettings, 
         setCurrentMainView, 
         currentUserId, 
         currentUsername, 
-        logout 
+        logout,
+        fontFamily
     } = useAppStore();
 
     const handleAccountClick = () => {
@@ -28,11 +27,19 @@ export default function Header() {
     return (
         <header className="header-wrapper">
             <h1 className="header-logo">TOING</h1>
-            <div className="button-wrapper">
-                <button className="action-button" onClick={handleAccountClick}>
+            <div className="button-wrapper" style={{ fontFamily }}>
+                <button
+                    className="action-button"
+                    onClick={handleAccountClick}
+                    style={{ fontFamily }}
+                >
                     {currentUserId ? `로그아웃` : '로그인'}
                 </button>
-                <button className="action-button primary" onClick={toggleSettings}>
+                <button
+                    className="action-button primary"
+                    onClick={toggleSettings}
+                    style={{ fontFamily }}
+                >
                     설정
                 </button>
             </div>

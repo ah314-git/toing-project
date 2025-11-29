@@ -18,14 +18,12 @@ export default function Setting() {
         setCurrentMainView,
 
         //기본설정
-        startWeekDay,
-        setStartWeekDay,
-        timeFormat,
-        setTimeFormat,
-        showTime,
-        toggleShowTime
-
+        startWeekDay, setStartWeekDay,
+        timeFormat, setTimeFormat,
+        showTime, toggleShowTime,
+        fontFamily, setFontFamily
     } = useAppStore();
+
     const [openMenuId, setOpenMenuId] = useState(null);
     const handleMenuClick = (id) => {
         setOpenMenuId(openMenuId === id ? null : id);
@@ -86,6 +84,21 @@ export default function Setting() {
                                         onClick={toggleShowTime}
                                     >
                                         {showTime ? 'ON' : 'OFF'}
+                                    </button>
+                                )}
+
+
+                                {subItem === '글꼴' && (
+                                    <button
+                                        className="sub-item-btn"
+                                        onClick={() => {
+                                            const FONTS = ['Arial', '나눔고딕', '나눔손글씨장미체', '휴먼편지체'];
+                                            const currentIndex = FONTS.indexOf(fontFamily);
+                                            const nextIndex = (currentIndex + 1) % FONTS.length;
+                                            setFontFamily(FONTS[nextIndex]);
+                                        }}
+                                    >
+                                        {fontFamily}
                                     </button>
                                 )}
 

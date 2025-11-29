@@ -10,6 +10,7 @@ export default function MyTodo() {
         toggleTodoDone,
         editTodo,
         deleteTodo,
+        fontFamily
     } = useAppStore();
 
     const [isAdding, setIsAdding] = useState(false);
@@ -101,6 +102,7 @@ export default function MyTodo() {
                                 alignItems: "center",
                                 flex: 1,
                                 cursor: "pointer",
+                                fontFamily // 폰트 적용
                             }}
                             onClick={() => toggleTodoDone(selectedDate, item.id)}
                         >
@@ -112,11 +114,12 @@ export default function MyTodo() {
                                     e.stopPropagation();
                                     toggleTodoDone(selectedDate, item.id);
                                 }}
-                                onChange={() => {}}
+                                onChange={() => { }}
                             />
                             {editingId === item.id ? (
                                 <input
                                     className="input-inline"
+                                    style={{ fontFamily }} // 폰트 적용
                                     defaultValue={item.text}
                                     autoFocus
                                     onKeyDown={(e) => {
@@ -128,7 +131,7 @@ export default function MyTodo() {
                                     onBlur={() => setEditingId(null)}
                                 />
                             ) : (
-                                <span className={`text ${item.done ? "done" : ""}`}>
+                                <span className={`text ${item.done ? "done" : ""}`} style={{ fontFamily }}>
                                     {item.text}
                                 </span>
                             )}
@@ -138,22 +141,24 @@ export default function MyTodo() {
             </ul>
 
             {isAdding && (
-                <div className="input-inline" style={{ display: "flex"}}>
+                <div className="input-inline" style={{ display: "flex", fontFamily }}>
                     <input
                         ref={inputRef}
                         className="input-inline"
                         value={input}
+                        style={{ fontFamily }}
                         onChange={(e) => setInput(e.target.value)}
                         onKeyDown={handleAddEnter}
                     />
                 </div>
             )}
 
-            <div style={{textAlign: "center" }}>
-                <button className="add-button" onClick={handleAdd}>
+            <div style={{ textAlign: "center" }}>
+                <button className="add-button" style={{ fontFamily }} onClick={handleAdd}>
                     할 일 추가
                 </button>
             </div>
+
 
             {menu && (
                 <div

@@ -9,7 +9,8 @@ export default function MyJournal() {
         addMessage,
         messagesByDate,
         timeFormat,
-        showTime
+        showTime,
+        fontFamily
     } = useAppStore();
 
     const dateKey = toDay(selectedDate);
@@ -32,7 +33,7 @@ export default function MyJournal() {
         addMessage(dateKey, {
             id: Date.now().toString(),
             text: value,
-            time: new Date(), // Date 객체로 저장
+            time: new Date(),
             type: "user"
         });
 
@@ -73,7 +74,7 @@ export default function MyJournal() {
             addMessage(dateKey, {
                 id: "ai-" + Date.now().toString(),
                 text: data.text || "AI가 응답을 생성하지 못했습니다.",
-                time: new Date(), // Date 객체로 저장
+                time: new Date(),
                 type: "ai"
             });
         } catch (err) {
@@ -83,7 +84,6 @@ export default function MyJournal() {
         }
     };
 
-    // 시간 포맷 함수
     const formatTime = (time) => {
         if (!time) return "";
         const date = time instanceof Date ? time : new Date(time);
@@ -97,24 +97,29 @@ export default function MyJournal() {
         }
     };
 
-
     return (
-        <div className="journal-wrapper">
+        <div className="journal-wrapper" style={{ fontFamily }}>
             <div className="messages" ref={scrollRef}>
                 {list.map(m => (
                     <div key={m.id} className={`message-row ${m.type}`}>
                         {m.type === "user" && showTime && (
-                            <div className={`time user-time`}>{formatTime(m.time)}</div>
+                            <div className={`time user-time`} style={{ fontFamily }}>
+                                {formatTime(m.time)}
+                            </div>
                         )}
-                        <div className={`bubble ${m.type}`}>{m.text}</div>
+                        <div className={`bubble ${m.type}`} style={{ fontFamily }}>
+                            {m.text}
+                        </div>
                         {m.type === "ai" && showTime && (
-                            <div className={`time ai-time`}>{formatTime(m.time)}</div>
+                            <div className={`time ai-time`} style={{ fontFamily }}>
+                                {formatTime(m.time)}
+                            </div>
                         )}
                     </div>
                 ))}
             </div>
 
-            <div className="input-area">
+            <div className="input-area" style={{ fontFamily }}>
                 <textarea
                     ref={inputRef}
                     className="text-input"
@@ -122,6 +127,7 @@ export default function MyJournal() {
                     onChange={e => setText(e.target.value)}
                     onKeyDown={handleKeyDown}
                     placeholder="일상을 기록하세요"
+                    style={{ fontFamily }}
                 />
 
                 <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
@@ -129,6 +135,7 @@ export default function MyJournal() {
                         className="btn secondary"
                         onClick={handleAiSummary}
                         disabled={isAiLoading}
+                        style={{ fontFamily }}
                     >
                         {isAiLoading ? "요약중..." : "AI 요약"}
                     </button>
@@ -136,6 +143,7 @@ export default function MyJournal() {
                         className="btn primary"
                         onClick={sendMessage}
                         disabled={text.trim().length === 0}
+                        style={{ fontFamily }}
                     >
                         전송
                     </button>
