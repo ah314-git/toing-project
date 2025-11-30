@@ -116,6 +116,7 @@ export const useAppStore = create((set, get) => ({
     // -----------------------------
 
 
+    //기본 설정
     startWeekDay: '일요일',
     setStartWeekDay: (day) => set({ startWeekDay: day }),
 
@@ -125,6 +126,18 @@ export const useAppStore = create((set, get) => ({
     showTime: true,
     toggleShowTime: () => set((state) => ({ showTime: !state.showTime })),
 
+
+    //테마
+    toggleDarkMode: () => set((state) => ({ darkMode: !state.darkMode })),
+    theme: "light",
+    toggleTheme: () =>
+        set((state) => ({
+            theme: state.theme === "light" ? "dark" : "light"
+        })),
+
+
+
+    //글자 스타일
     fontFamily: 'Arial',
     fontList: ['Arial', '나눔고딕', '나눔손글씨장미체', '휴먼편지체'],
     setFontFamily: (font) => set({ fontFamily: font }),

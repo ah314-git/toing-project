@@ -1,0 +1,47 @@
+/* color.css */
+
+/* 라이트 모드 */
+:root {
+    --bg: #ffffff;
+    --bg-weak: #fafafa;
+    --card-bg: #ffffff;
+    --card-bg-weak: #f0f0f0;
+
+    --text: #111111;
+    --text-sub: #777777;
+    --text-light: #aaaaaa;
+
+    --border: #aaaaaa;
+
+    --btn-bg: #f0f0f0;
+    --btn-border: #999999;
+
+    --primary: #337af7;
+    --primary-light: #78cef9;
+
+    --bubble-user: #e0e0e0;
+    --bubble-ai: #d8effa;
+}
+
+/* 다크 모드 */
+.dark {
+    --bg: #1a1a1a;
+    --bg-weak: #333333;
+    --card-bg: #2a2a2a;
+    --card-bg-weak: #3a3a3a;
+
+    --text: #eeeeee;
+    --text-sub: #bbbbbb;
+    --text-light: #999999;
+
+    --border: #555555;
+
+    --btn-bg: #3a3a3a;
+    --btn-border: #666666;
+
+    --primary: #5b9bff;
+    --primary-light: #8ed9ff;
+
+    --bubble-user: #444444;
+    --bubble-ai: #3b4f61;
+}

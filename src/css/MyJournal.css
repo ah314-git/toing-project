@@ -1,15 +1,17 @@
 /* Journal.css */
+@import "./color.css"; /* color.css에 변수 정의되어 있어야 함 */
 
 .journal-wrapper {
     height: 100%;
-    background: #999;
+    background: var(--bg-weak);
     display: flex;
     flex-direction: column;
+    color: var(--text);
 }
 
 /* 메시지 영역 */
 .messages {
-    background: #fff;
+    background: var(--card-bg);
     flex: 1;
     overflow-y: auto;
     padding: 20px;
@@ -38,30 +40,29 @@
     padding: 20px 40px;
     border-radius: 100px;
     font-size: 16px;
-    color: #111;
+    color: var(--text);
 }
 
 .bubble.user {
-    background: #E0E0E0;
+    background: var(--bubble-user);
 }
 
 .bubble.ai {
-    background: #D8EFFA;
+    background: var(--bubble-ai);
 }
 
 /* 시간 텍스트 */
 .time {
     font-size: 11px;
-    color: #777;
+    color: var(--text-sub);
 }
-
 
 /* 입력 영역 */
 .input-area {
     display: flex;
     position: fixed;
     bottom: 0;
-    background: #fff;
+    background: var(--card-bg);
     padding: 50px;
     align-items: flex-start;
     position: relative;
@@ -78,7 +79,6 @@
     background: linear-gradient(to bottom, rgba(0,0,0,0.08), rgba(0,0,0,0));
 }
 
-
 /* 텍스트 입력 */
 .text-input {
     flex: 1;
@@ -87,6 +87,8 @@
     resize: none;
     outline: none;
     font-size: 24px;
+    background: var(--card-bg-weak);
+    color: var(--text);
 }
 
 /* 버튼 */
@@ -96,14 +98,16 @@
     border: none;
     cursor: pointer;
     font-size: 24px;
+    background: var(--btn-bg);
+    color: var(--text);
 }
 
 .btn.primary {
-    background: #337AF7;
-    color: #fff;
+    background: var(--primary);
+    color: var(--text);
 }
 
 .btn.secondary {
-    background: #E0E0E0;
-    color: #fff;
+    background: var(--btn-bg);
+    color: var(--text);
 }

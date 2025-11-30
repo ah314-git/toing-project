@@ -1,11 +1,10 @@
-
 .setting-wrapper {
     position: fixed;
     top: 0;
     right: 0;
     width: 360px;
     height: 100vh;
-    background-color: #fff;
+    background-color: var(--card-bg);
     box-shadow: -4px 0 12px rgba(0, 0, 0, 0.1);
     z-index: 2000;
     transform: translateX(100%);
@@ -17,21 +16,18 @@
     transform: translateX(0);
 }
 
-
-
 .setting-back-button {
     background: none;
     border: none;
     font-size: 24px;
     cursor: pointer;
     margin-bottom: 40px;
-    color: #333;
+    color: var(--text);
 }
 
-
 .menu-item {
-    background: #fff;
-    border: 1px solid #eee;
+    background: var(--card-bg-weak);
+    border: 1px solid var(--border);
     border-radius: 8px;
     margin-bottom: 8px;
     overflow: hidden;
@@ -45,16 +41,16 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    color: #111;
+    color: var(--text);
 }
 
 .menu-header:hover {
-    background: #f0f0f0;
+    background: var(--bg-weak);
 }
 
 .sub-menu {
     padding: 0 16px;
-    background: #f0f0f0;
+    background: var(--bg-weak);
     max-height: 0;
     transition: max-height 0.2s ease-in-out;
 }
@@ -69,32 +65,30 @@
     align-items: center;
     padding: 8px 0;
     font-size: 16px;
-    color: #666;
-    
+    color: var(--text-sub);
 }
 
 .sub-item:last-child {
-    border-bottom: none
+    border-bottom: none;
 }
 
 .sub-item-btn {
     border: none;
     background: none;
     font-size: 16px;
-    color: #666;
+    color: var(--text-sub);
     cursor: pointer;
 }
 
 .sub-item-btn:hover {
-    color: #337AF7;
+    color: var(--primary);
 }
-
-
 
 .arrow {
-    color: #aaa;
+    color: var(--border);
     transition: transform 0.2s;
 }
+
 .arrow.open {
     transform: rotate(90deg);
 }

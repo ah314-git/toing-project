@@ -3,8 +3,8 @@ import { useAppStore } from "../stores/useAppStore";
 import "../css/Setting.css";
 
 const SETTINGS_MENU = [
-    { id: 'basic', title: '기본 설정', subItems: ['시작 요일', '시간 형식', '시간 표시', '언어'] },
-    { id: 'theme', title: '테마', subItems: ['다크 모드', '색상 팔레트'] },
+    { id: 'basic', title: '기본 설정', subItems: ['시작 요일', '시간 형식', '시간 표시'] },
+    { id: 'theme', title: '테마', subItems: ['다크 모드'] },
     { id: 'font', title: '글자 스타일', subItems: ['글꼴', '크기'] },
     { id: 'data', title: '데이터 관리', subItems: ['백업', '복원', '데이터 삭제'] },
     { id: 'terms', title: '이용 약관', subItems: [] },
@@ -22,7 +22,8 @@ export default function Setting() {
         timeFormat, setTimeFormat,
         showTime, toggleShowTime,
         fontFamily, setFontFamily,
-        fontSize, setFontSize
+        fontSize, setFontSize,
+        theme, toggleTheme
     } = useAppStore();
 
     const [openMenuId, setOpenMenuId] = useState(null);
@@ -85,6 +86,12 @@ export default function Setting() {
                                         onClick={toggleShowTime}
                                     >
                                         {showTime ? 'ON' : 'OFF'}
+                                    </button>
+                                )}
+
+                                {subItem === '다크 모드' && (
+                                    <button className="sub-item-btn" onClick={toggleTheme} >
+                                        {theme === 'dark' ? 'ON' : 'OFF'}
                                     </button>
                                 )}
 

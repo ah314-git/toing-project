@@ -9,12 +9,18 @@ import Login from "../components/Login";
 import Register from "../components/Register";
 
 export default function Home() {
-    const { currentMainView, isSettingsOpen, toggleSettings } = useAppStore();
+    const {
+        currentMainView,
+        isSettingsOpen,
+        toggleSettings,
+        theme
+    } = useAppStore();
+
     const showHeader = currentMainView === 'Home';
     const contentMarginTop = showHeader ? '100px' : '0';
 
     return (
-        <div className="layout">
+        <div className={`layout ${theme === 'dark' ? 'dark' : ''}`}>
             {showHeader && <Header />}
             {isSettingsOpen && <div className="backdrop" onClick={toggleSettings} />}
             <Setting />
