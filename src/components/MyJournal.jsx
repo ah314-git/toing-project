@@ -8,6 +8,8 @@ export default function MyJournal() {
         selectedDate,
         addMessage,
         messagesByDate,
+        updateMessage,
+        deleteMessage,
         timeFormat,
         showTime,
         fontFamily,
@@ -19,6 +21,8 @@ export default function MyJournal() {
 
     const [text, setText] = useState("");
     const [isAiLoading, setIsAiLoading] = useState(false);
+    const [menu, setMenu] = useState(null);
+    const [editMessageId, setEditMessageId] = useState(null);
     const scrollRef = useRef(null);
     const inputRef = useRef(null);
 
@@ -27,16 +31,31 @@ export default function MyJournal() {
         if (box) box.scrollTop = box.scrollHeight;
     }, [list.length]);
 
+    useEffect(() => {
+        const handleClickOutside = (e) => {
+            if (menu && !e.target.closest(".context-menu")) {
+                setMenu(null);
+            }
+        };
+        document.addEventListener("click", handleClickOutside);
+        return () => document.removeEventListener("click", handleClickOutside);
+    }, [menu]);
+
     const sendMessage = () => {
         const value = text.trim();
         if (!value) return;
 
-        addMessage(dateKey, {
-            id: Date.now().toString(),
-            text: value,
-            time: new Date(),
-            type: "user"
-        });
+        if (editMessageId) {
+            updateMessage(dateKey, editMessageId, value);
+            setEditMessageId(null);
+        } else {
+            addMessage(dateKey, {
+                id: Date.now().toString(),
+                text: value,
+                time: new Date(),
+                type: "user"
+            });
+        }
 
         setText("");
         inputRef.current?.focus();
@@ -98,27 +117,57 @@ export default function MyJournal() {
         }
     };
 
+    const handleEdit = (id, text) => {
+        setEditMessageId(id);
+        setText(text);
+        setMenu(null);
+        inputRef.current?.focus();
+    };
+
+    const handleDelete = (id) => {
+        deleteMessage(dateKey, id);
+        setMenu(null);
+        if (editMessageId === id) {
+            setEditMessageId(null);
+            setText("");
+        }
+    };
+
     return (
         <div className="journal-wrapper" style={{ fontFamily, fontSize }}>
             <div className="messages" ref={scrollRef}>
                 {list.map(m => (
-                    <div key={m.id} className={`message-row ${m.type}`} style={{ fontFamily, fontSize }}>
+                    <div
+                        key={m.id}
+                        className={`message-row ${m.type}`}
+                        style={{ fontFamily, fontSize }}
+                        onContextMenu={e => {
+                            e.preventDefault();
+                            setMenu({ x: e.pageX, y: e.pageY, id: m.id, type: m.type, text: m.text });
+                        }}
+                    >
                         {m.type === "user" && showTime && (
-                            <div className={`time user-time`} style={{ fontFamily, fontSize }}>
-                                {formatTime(m.time)}
-                            </div>
+                            <div className="time user-time">{formatTime(m.time)}</div>
                         )}
-                        <div className={`bubble ${m.type}`} style={{ fontFamily, fontSize }}>
-                            {m.text}
-                        </div>
+                        <div className={`bubble ${m.type}`}>{m.text}</div>
                         {m.type === "ai" && showTime && (
-                            <div className={`time ai-time`} style={{ fontFamily, fontSize }}>
-                                {formatTime(m.time)}
-                            </div>
+                            <div className="time ai-time">{formatTime(m.time)}</div>
                         )}
                     </div>
                 ))}
             </div>
+
+            {menu && (
+                <div
+                    className="context-menu"
+                    style={{ top: menu.y, left: menu.x, fontFamily, fontSize }}
+                >
+                    {menu.type === "user" && (
+                        <div onClick={() => handleEdit(menu.id, menu.text)}>수정</div>
+                    )}
+                    <div onClick={() => handleDelete(menu.id)}>삭제</div>
+                </div>
+            )}
 
             <div className="input-area" style={{ fontFamily, fontSize }}>
                 <textarea
@@ -130,8 +179,7 @@ export default function MyJournal() {
                     placeholder="일상을 기록하세요"
                     style={{ fontFamily, fontSize }}
                 />
-
-                <div style={{ display: "flex", flexDirection: "column", gap: 8, fontFamily, fontSize }}>
+                <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
                     <button
                         className="btn secondary"
                         onClick={handleAiSummary}
@@ -146,7 +194,7 @@ export default function MyJournal() {
                         disabled={text.trim().length === 0}
                         style={{ fontFamily, fontSize }}
                     >
-                        전송
+                        {editMessageId ? "수정 완료" : "전송"}
                     </button>
                 </div>
             </div>

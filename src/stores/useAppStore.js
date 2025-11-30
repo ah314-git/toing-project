@@ -96,7 +96,7 @@ export const useAppStore = create((set, get) => ({
 
     addMessage: (date, message) => {
         set((state) => {
-            const prev = state.messagesByDate[date] || [];
+            const prev = state.messagesByDate?.[date] || [];
             const updated = [...prev, message];
             return { messagesByDate: { ...state.messagesByDate, [date]: updated } };
         });
@@ -109,6 +109,27 @@ export const useAppStore = create((set, get) => ({
             return { messagesByDate: next };
         });
     },
+
+    updateMessage: (dateKey, msgId, newText) => {
+        set((state) => {
+            const messages = state.messagesByDate?.[dateKey];
+            if (!messages) return {}; // 해당 날짜가 없으면 아무 것도 안함
+            const updated = messages.map(m => m.id === msgId ? { ...m, text: newText } : m);
+            return { messagesByDate: { ...state.messagesByDate, [dateKey]: updated } };
+        });
+    },
+
+    deleteMessage: (dateKey, msgId) => {
+        set((state) => {
+            const messages = state.messagesByDate?.[dateKey];
+            if (!messages) return {}; // 해당 날짜가 없으면 아무 것도 안함
+            const updated = messages.filter(m => m.id !== msgId);
+            return { messagesByDate: { ...state.messagesByDate, [dateKey]: updated } };
+        });
+    },
+
+
+
 
 
     // -----------------------------
