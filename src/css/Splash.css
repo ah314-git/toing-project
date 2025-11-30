@@ -1,0 +1,50 @@
+/* Splash.css */
+.splash-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    z-index: 9999;
+}
+
+/* 텍스트 페이드인 + 살짝 위에서 내려오는 애니 */
+.splash-text {
+    color: #008DD4;
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 16px;
+    opacity: 0;
+    transform: translateY(-10px);
+    animation: textFadeIn 1s ease forwards;
+    animation-delay: 0.5s;
+}
+
+@keyframes textFadeIn {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 로고 페이드인 + 살짝 확대 */
+.splash-logo {
+    width: 300px;
+    height: auto;
+    opacity: 0;
+    transform: scale(0.8);
+    animation: logoFadeIn 1s ease forwards;
+    animation-delay: 0.8s;
+}
+
+@keyframes logoFadeIn {
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
