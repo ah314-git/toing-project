@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
-import Splash from "./components/Splash"; // 스플래시 화면 컴포넌트
+import Splash from "./components/Splash";
 
 export default function App() {
   const [showSplash, setShowSplash] = useState(true);
