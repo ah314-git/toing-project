@@ -26,7 +26,7 @@ export default function Header() {
 
     return (
         <header className="header-wrapper">
-            <h1 className="header-logo">TOING</h1>
+            <img className="header-logo" src="/logo.svg" alt="로고" />
             <div className="button-wrapper" style={{ fontFamily }}>
                 <button
                     className="action-button"

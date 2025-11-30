@@ -1,53 +1,45 @@
-/* 공통 레이아웃 */
+/* MyCalendar.css */
+
+
+.react-calendar__tile--now {
+    background-color: var(--today-bg) !important;
+    color: var(--today-text) !important;
+}
+
+.react-calendar__tile--active {
+    background-color: #78CEF9 !important;
+    color: #fff !important;
+}
+
+
+
 .calendar-wrapper {
-    background-color: var(--card-bg) !important;
+    background-color: var(--card-bg);
     width: 100%;
     margin: 10px;
 }
 
 .calendar-wrapper .react-calendar {
+    background-color: var(--card-bg);
     width: 100%;
     min-width: 360px;
     border: none;
     font-size: 24px;
-    background-color: var(--card-bg) !important;
-    color: var(--text) !important;
 }
 
-.react-calendar__tile {
+.calendar-wrapper .react-calendar__tile {
+    background-color: var(--card-bg);
     height: 100px;
     display: flex;
     flex-direction: column;
-    background-color: var(--card-bg) !important;
-    color: var(--text) !important;
 }
 
-.react-calendar__tile--active {
-    background-color: var(--primary) !important;
-    color: var(--card-bg) !important;
-}
-
-.react-calendar__tile--now {
-    background-color: var(--primary-light) !important;
-    color: var(--card-bg) !important;
-}
-
-.react-calendar__month-view__days__day {
-    color: var(--text) !important;
-}
-
-.react-calendar__navigation button {
-    border: none;
-    background: none;
-    font-size: 30px;
-    cursor: pointer;
-    color: var(--text-sub) !important;
-}
 
 /* 기본 캘린더 숨기기 */
 .calendar-wrapper .react-calendar__navigation {
     display: none !important;
 }
+
 
 /* 커스텀 헤더 */
 .calendar-header {
@@ -60,28 +52,31 @@
 .calendar-year-text {
     font-size: 16px;
     font-weight: 500;
-    color: var(--text-sub) !important;
+    color: #aaa;
 }
+
 
 .calendar-month-text {
     font-size: 30px;
     font-weight: 700;
-    color: var(--primary) !important;
+    color: #337AF7;
 }
-
 .calendar-month-row {
     display: flex;
     gap: 30px;
     align-items: center;
 }
 
+
 .calendar-arrow {
     border: none;
     background: none;
     font-size: 30px;
     cursor: pointer;
-    color: var(--text-sub) !important;
+    color: #aaa;
 }
+
+
 
 .calendar-dot-wrapper {
     display: flex;
@@ -93,11 +88,10 @@
 .calendar-dot {
     width: 6px;
     height: 6px;
-    background: var(--primary-light);
+    background: #78CEF9;
     border-radius: 50%;
     margin-left: 2px;
 }
-
 .calendar-dot:first-child {
     margin-left: 0;
 }

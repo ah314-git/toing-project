@@ -2,6 +2,9 @@
 
 /* 라이트 모드 */
 :root {
+    --today-bg: #ddd;
+    --today-text: #111;
+
     --bg: #ffffff;
     --bg-weak: #fafafa;
     --card-bg: #ffffff;
@@ -25,7 +28,10 @@
 
 /* 다크 모드 */
 .dark {
-    --bg: #1a1a1a;
+    --today-bg: #555;
+    --today-text: #eee;
+
+    --bg: #222;
     --bg-weak: #333333;
     --card-bg: #2a2a2a;
     --card-bg-weak: #3a3a3a;
@@ -39,9 +45,10 @@
     --btn-bg: #3a3a3a;
     --btn-border: #666666;
 
-    --primary: #5b9bff;
+    --primary: #337af7;
     --primary-light: #8ed9ff;
 
     --bubble-user: #444444;
-    --bubble-ai: #3b4f61;
+    --bubble-ai: #59abd1;
+
 }

@@ -15,12 +15,8 @@
 
 /* 로고 (그대로) */
 .header-logo {
-    font-size: 36px;
-    font-weight: bold;
-    font-family:'Times New Roman', Times, serif;
-    background: linear-gradient(180deg, #5f9dffff 40%, #ff80c0ff);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    width: 150px; /* 원하는 크기 */
+    height: auto;
 }
 
 /* 버튼 그룹 */

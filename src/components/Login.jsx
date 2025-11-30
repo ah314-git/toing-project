@@ -51,7 +51,7 @@ export default function Login() {
     return (
         <div className="login-wrapper">
             <div className="login-form">
-                <h2 className="login-logo" onClick={handleGoHome} style={{ cursor: 'pointer' }}>TOING</h2>
+                <img className="login-logo" src="/logo.svg" alt="로고" onClick={handleGoHome} style={{ cursor: 'pointer' }} />
                 <form onSubmit={handleLogin}>
 
                     <div className="input-group">
@@ -80,7 +80,7 @@ export default function Login() {
 
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
 
-                        <div>
+                        <div style={{ display: 'flex', alignItems: 'center', marginRight: '100px' }}>
                             <input type="checkbox" id="saveId" />
                             <label htmlFor="saveId">아이디 저장</label>
                         </div>

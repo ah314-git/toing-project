@@ -43,7 +43,7 @@
 
 .todo-checkbox:checked::after {
     content: "✓";
-    color: var(--text);
+    color: #fff;
     font-size: 16px;
     position: absolute;
     top: -1px;
