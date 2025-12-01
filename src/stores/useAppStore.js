@@ -1,7 +1,10 @@
+/* userAppstore */
+
 import { create } from "zustand";
 import { toDay } from "../utils/date";
 
 const today = toDay(new Date());
+const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
 export const useAppStore = create((set, get) => ({
     selectedDate: today,
@@ -20,15 +23,20 @@ export const useAppStore = create((set, get) => ({
     setCurrentMainView: (viewName) => set({ currentMainView: viewName }),
 
     login: async (userId, username) => {
-        const res = await fetch(`api/data/${userId}`);
-        const data = await res.json();
-        set(() => ({
-            currentUserId: userId,
-            currentUsername: username,
-            currentMainView: 'Home',
-            todosByDate: data.todosByDate || {},
-            messagesByDate: data.messagesByDate || {},
-        }));
+        try {
+            const res = await fetch(`${API_BASE}/data/${userId}`);
+            if (!res.ok) throw new Error('API 요청 실패');
+            const data = await res.json();
+            set(() => ({
+                currentUserId: userId,
+                currentUsername: username,
+                currentMainView: 'Home',
+                todosByDate: data.todosByDate || {},
+                messagesByDate: data.messagesByDate || {},
+            }));
+        } catch (err) {
+            console.error(err);
+        }
     },
 
     logout: () => set(() => ({
@@ -43,11 +51,15 @@ export const useAppStore = create((set, get) => ({
         const { currentUserId, todosByDate, messagesByDate } = get();
         if (!currentUserId) return;
 
-        await fetch(`api/data/${currentUserId}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ todosByDate, messagesByDate })
-        });
+        try {
+            await fetch(`${API_BASE}/data/${currentUserId}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ todosByDate, messagesByDate })
+            });
+        } catch (err) {
+            console.error(err);
+        }
     },
 
     // -----------------------------
@@ -106,24 +118,21 @@ export const useAppStore = create((set, get) => ({
         set(state => ({
             messagesByDate: { ...state.messagesByDate, [date]: newList }
         }));
-        await saveUserData();
+        await get().saveUserData();
     },
 
     addMessage: async (date, message) => {
-    set(state => {
-        const prev = state.messagesByDate[date] || [];
-        return {
-            messagesByDate: {
-                ...state.messagesByDate,
-                [date]: [...prev, message]
-            }
-        };
-    });
-
-    // DB에 날짜별 메시지 저장
-    await get().saveUserData();
-},
-
+        set(state => {
+            const prev = state.messagesByDate[date] || [];
+            return {
+                messagesByDate: {
+                    ...state.messagesByDate,
+                    [date]: [...prev, message]
+                }
+            };
+        });
+        await get().saveUserData();
+    },
 
     updateMessage: async (date, msgId, newText) => {
         set(state => {

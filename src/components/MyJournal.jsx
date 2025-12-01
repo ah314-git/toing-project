@@ -1,3 +1,5 @@
+/* MyJournal */
+
 import React, { useState, useEffect, useRef } from "react";
 import { useAppStore } from "../stores/useAppStore";
 import { toDay } from "../utils/date";
@@ -20,6 +22,7 @@ export default function MyJournal() {
     const list = messagesByDate?.[dateKey] || [];
 
 
+    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
     const [text, setText] = useState("");
     const [isAiLoading, setIsAiLoading] = useState(false);
     const [menu, setMenu] = useState(null);
@@ -76,7 +79,7 @@ export default function MyJournal() {
 
         setIsAiLoading(true);
         try {
-            const res = await fetch("api/summary", {
+            const res = await fetch(`${API_BASE_URL}/summary`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ messages: userMsgs })

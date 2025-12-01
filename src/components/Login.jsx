@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { useAppStore } from "../stores/useAppStore";
 import "../css/Login.css";
 
-
+const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
 export default function Login() {
     const { setCurrentMainView, login } = useAppStore();
@@ -25,7 +25,7 @@ export default function Login() {
         setIsLoading(true);
 
         try {
-            const response = await fetch(`/api/login`, {
+            const response = await fetch(`${API_BASE}/login`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ username, password }),
@@ -53,9 +53,14 @@ export default function Login() {
     return (
         <div className="login-wrapper">
             <div className="login-form">
-                <img className="login-logo" src="/logo.svg" alt="로고" onClick={handleGoHome} style={{ cursor: 'pointer' }} />
+                <img
+                    className="login-logo"
+                    src="/logo.svg"
+                    alt="로고"
+                    onClick={handleGoHome}
+                    style={{ cursor: 'pointer' }}
+                />
                 <form onSubmit={handleLogin}>
-
                     <div className="input-group">
                         <input
                             className="input"
@@ -81,7 +86,6 @@ export default function Login() {
                     </div>
 
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
-
                         <div style={{ display: 'flex', alignItems: 'center', marginRight: '100px' }}>
                             <input type="checkbox" id="saveId" />
                             <label htmlFor="saveId">아이디 저장</label>
@@ -91,7 +95,6 @@ export default function Login() {
                             <button type="button" className="link-button">아이디·비밀번호 찾기</button>
                             <span>|</span>
                             <button type="button" className="link-button" onClick={handleGoRegister} style={{ color: '#337AF7' }}>회원가입</button>
-
                         </div>
                     </div>
 
@@ -104,7 +107,6 @@ export default function Login() {
                     </button>
                 </form>
             </div>
-        </div >
+        </div>
     );
 }
-

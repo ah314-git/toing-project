@@ -6,7 +6,7 @@ import "../css/Register.css";
 
 const USERNAME_REGEX = /^[a-zA-Z0-9]{5,20}$/;
 const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-const API_BASE_URL = "http://localhost:4000/api/auth";
+const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
 export default function Register() {
     const { setCurrentMainView } = useAppStore();
@@ -58,7 +58,7 @@ export default function Register() {
         }
         setIsLoading(true);
         try {
-            const response = await fetch(`/api/login/check-username/${username}`);
+            const response = await fetch(`${API_BASE}/auth/check-username/${username}`);
             const data = await response.json();
             if (!response.ok || !data.available) {
                 setIsIdAvailable(false);
@@ -89,7 +89,7 @@ export default function Register() {
 
         setIsLoading(true);
         try {
-            const response = await fetch(`/api/login/register`, {
+            const response = await fetch(`${API_BASE}/register`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ username, password }),
@@ -99,8 +99,7 @@ export default function Register() {
                 alert(data.message || "회원가입에 실패했습니다.");
                 return;
             }
-            alert(`"${username}"님, 회원가입이 완료되었습니다!
-로그인 화면으로 이동합니다.`);
+            alert(`"${username}"님, 회원가입이 완료되었습니다!\n로그인 화면으로 이동합니다.`);
             setCurrentMainView("Login");
         } catch (err) {
             console.error(err);
@@ -122,13 +121,10 @@ export default function Register() {
 
     return (
         <div className="register-wrapper">
-            {/* 로그인 화면으로 돌아가기 */}
-            
             <button className="back-button" onClick={handleGoLogin}>
                 ← 로그인으로 돌아가기
             </button>
             <div className="form-container">
-                {/* 회원가입 */}
                 <h2>회원가입</h2>
                 <form onSubmit={handleSubmit}>
 

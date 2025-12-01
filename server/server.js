@@ -1,20 +1,29 @@
+/* server/server.js */
+
 import express from 'express';
 import path from 'path';
 import cors from 'cors';
 import mongoose from 'mongoose';
 import 'dotenv/config';
+import { fileURLToPath } from 'url';
+import { dirname, resolve } from 'path';
 
 import authRoutes from './routes/auth.js';
 import dataRoutes from './routes/data.js';
 import aiRoutes from './routes/ai.js';
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
 const app = express();
 const PORT = process.env.PORT || 4000;
 
 // -----------------------------
-// 1. 미들웨어 순서 조정
+// 1. 미들웨어
 // -----------------------------
-app.use(cors()); // 라우트보다 위에
+app.use(cors({
+  origin: ['https://toing-project.onrender.com'] // 프론트엔드 도메인
+}));
 app.use(express.json());
 
 // -----------------------------
@@ -27,24 +36,19 @@ app.use('/api/summary', aiRoutes);
 // -----------------------------
 // 3. 정적 파일 (React build)
 // -----------------------------
-app.use(express.static(path.resolve('./dist')));
+app.use(express.static(resolve(__dirname, '../dist')));
 
-// -----------------------------
-// 4. 404 처리
-// -----------------------------
-app.use((req, res) => res.status(404).json({ message: '경로를 찾을 수 없습니다.' }));
-
-// -----------------------------
-// 5. 서버 시작
-// -----------------------------
-app.listen(PORT, () => {
-  console.log("Server running on port " + PORT);
+// SPA 대응: React 라우팅
+app.get('*', (req, res) => {
+  res.sendFile(resolve(__dirname, '../dist', 'index.html'));
 });
 
 // -----------------------------
-// 6. MongoDB 연결
+// 4. MongoDB 연결 및 서버 시작
 // -----------------------------
-console.log("MONGO_URI:", process.env.MONGO_URI);
 mongoose.connect(process.env.MONGO_URI)
-    .then(() => console.log('MongoDB 연결 성공'))
-    .catch(err => console.error('MongoDB 연결 오류:', err));
+  .then(() => {
+    console.log('MongoDB 연결 성공');
+    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+  })
+  .catch(err => console.error('MongoDB 연결 오류:', err));

@@ -3,6 +3,7 @@
 import React from "react";
 import { useAppStore } from "../stores/useAppStore";
 import "../css/Header.css";
+import Logo from "../assets/logo.svg"; // import 추가
 
 export default function Header() {
     const { 
@@ -26,7 +27,13 @@ export default function Header() {
 
     return (
         <header className="header-wrapper">
-            <img className="header-logo" src="/logo.svg" alt="로고" />
+            <img 
+                className="header-logo" 
+                src={Logo} // import한 이미지 사용
+                alt="로고" 
+                style={{ cursor: "pointer" }}
+                onClick={() => setCurrentMainView("Home")} 
+            />
             <div className="button-wrapper" style={{ fontFamily }}>
                 <button
                     className="action-button"
