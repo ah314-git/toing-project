@@ -1,7 +1,4 @@
-/* server/server.js */
-
 import express from 'express';
-
 import path from 'path';
 import cors from 'cors';
 import mongoose from 'mongoose';
@@ -17,7 +14,7 @@ const PORT = process.env.PORT || 4000;
 // -----------------------------
 // 1. 미들웨어 순서 조정
 // -----------------------------
-app.use(cors()); // 라우트보다 위에
+app.use(cors());
 app.use(express.json());
 
 // -----------------------------
@@ -33,18 +30,21 @@ app.use('/api/summary', aiRoutes);
 app.use(express.static(path.resolve('./dist')));
 
 
-// 4. SPA fallback (React 라우터용)
-app.get('/.*/', (req, res) => {
+// -----------------------------
+// 4. SPA fallback (미들웨어 방식으로 경로 파싱 오류 우회)
+// -----------------------------
+app.use((req, res) => {
+    // 2, 3번에서 처리되지 않은 모든 GET 요청은 index.html을 반환
+    // (path-to-regexp 오류를 피하기 위해 app.get 대신 app.use 사용)
     res.sendFile(path.join(process.cwd(), 'dist', 'index.html'));
 });
-
 
 
 // -----------------------------
 // 5. 서버 시작
 // -----------------------------
 app.listen(PORT, () => {
-  console.log("Server running on port " + PORT);
+  console.log("Server running on port " + PORT);
 });
 
 // -----------------------------
@@ -52,5 +52,5 @@ app.listen(PORT, () => {
 // -----------------------------
 console.log("MONGO_URI:", process.env.MONGO_URI);
 mongoose.connect(process.env.MONGO_URI)
-    .then(() => console.log('MongoDB 연결 성공'))
-    .catch(err => console.error('MongoDB 연결 오류:', err));
+    .then(() => console.log('MongoDB 연결 성공'))
+    .catch(err => console.error('MongoDB 연결 오류:', err));
