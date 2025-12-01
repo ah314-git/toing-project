@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { useAppStore } from "../stores/useAppStore";
 import "../css/Login.css";
 
-const API_BASE_URL = "http://localhost:4000/api/auth";
+
 
 export default function Login() {
     const { setCurrentMainView, login } = useAppStore();
