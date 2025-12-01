@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { useAppStore } from "../stores/useAppStore";
 import "../css/Login.css";
+import logo from '../assets/logo.svg';
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
@@ -55,7 +56,7 @@ export default function Login() {
             <div className="login-form">
                 <img
                     className="login-logo"
-                    src="/logo.svg"
+                    src={logo}
                     alt="로고"
                     onClick={handleGoHome}
                     style={{ cursor: 'pointer' }}

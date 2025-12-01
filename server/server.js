@@ -32,6 +32,12 @@ app.use('/api/summary', aiRoutes);
 // -----------------------------
 app.use(express.static(path.resolve('./dist')));
 
+
+// SPA fallback (React 라우터용)
+app.get('*', (req, res) => {
+    res.sendFile(path.join(process.cwd(), 'dist', 'index.html'));
+});
+
 // -----------------------------
 // 4. 404 처리
 // -----------------------------
