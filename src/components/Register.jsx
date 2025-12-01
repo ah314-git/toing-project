@@ -58,7 +58,7 @@ export default function Register() {
         }
         setIsLoading(true);
         try {
-            const response = await fetch(`${API_BASE}/check-username/${username}`);
+            const response = await fetch(`${API_BASE}/auth/check-username/${username}`);
             const data = await response.json();
             if (!response.ok || !data.available) {
                 setIsIdAvailable(false);
