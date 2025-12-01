@@ -34,11 +34,12 @@ app.use(express.static(path.resolve('./dist')));
 // 4. SPA fallback (미들웨어 방식으로 경로 파싱 오류 우회)
 // -----------------------------
 app.use((req, res) => {
-    // 2, 3번에서 처리되지 않은 모든 GET 요청은 index.html을 반환
-    // (path-to-regexp 오류를 피하기 위해 app.get 대신 app.use 사용)
-    res.sendFile(path.join(process.cwd(), 'dist', 'index.html'));
-});
 
+    if (!req.path.startsWith('/api')) {
+        return res.sendFile(path.join(process.cwd(), 'dist', 'index.html'));
+    }
+    res.status(404).json({ message: 'API endpoint not found' });
+});
 
 // -----------------------------
 // 5. 서버 시작
