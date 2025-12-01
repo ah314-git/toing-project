@@ -27,7 +27,7 @@ app.use('/api/summary', aiRoutes);
 // -----------------------------
 // 3. 정적 파일 (React build)
 // -----------------------------
-app.use(express.static(path.resolve('./dist')));
+app.use(express.static(path.join(process.cwd(), 'dist')));
 
 
 // -----------------------------
