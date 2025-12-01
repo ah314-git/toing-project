@@ -1,4 +1,5 @@
 import express from 'express';
+import path from 'path';
 import cors from 'cors';
 import mongoose from 'mongoose';
 import 'dotenv/config';
@@ -10,8 +11,6 @@ import aiRoutes from './routes/ai.js';
 const app = express();
 const PORT = process.env.PORT || 4000;
 
-app.use(cors());
-app.use(express.json());
 
 console.log("MONGO_URI:", process.env.MONGO_URI);
 
@@ -22,8 +21,10 @@ mongoose.connect(process.env.MONGO_URI)
 app.use('/api/auth', authRoutes);
 app.use('/api/data', dataRoutes);
 app.use('/api/summary', aiRoutes);
-app.use(cors());
-
 app.use((req, res) => res.status(404).json({ message: '경로를 찾을 수 없습니다.' }));
 
+
+app.use(cors());
+app.use(express.json());
+app.use(express.static(path.resolve('./dist')));
 app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));

@@ -23,7 +23,6 @@
 .button-wrapper {
     display: flex;
     gap: 10px;
-    margin-right: 50px;
 }
 
 /* 액션 버튼 */

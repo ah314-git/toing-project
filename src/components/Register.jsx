@@ -58,7 +58,7 @@ export default function Register() {
         }
         setIsLoading(true);
         try {
-            const response = await fetch(`${API_BASE_URL}/check-username/${username}`);
+            const response = await fetch(`/api/login/check-username/${username}`);
             const data = await response.json();
             if (!response.ok || !data.available) {
                 setIsIdAvailable(false);
@@ -89,7 +89,7 @@ export default function Register() {
 
         setIsLoading(true);
         try {
-            const response = await fetch(`${API_BASE_URL}/register`, {
+            const response = await fetch(`/api/login/register`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ username, password }),

@@ -20,7 +20,7 @@ export const useAppStore = create((set, get) => ({
     setCurrentMainView: (viewName) => set({ currentMainView: viewName }),
 
     login: async (userId, username) => {
-        const res = await fetch(`http://localhost:4000/api/data/${userId}`);
+        const res = await fetch(`api/data/${userId}`);
         const data = await res.json();
         set(() => ({
             currentUserId: userId,
@@ -43,7 +43,7 @@ export const useAppStore = create((set, get) => ({
         const { currentUserId, todosByDate, messagesByDate } = get();
         if (!currentUserId) return;
 
-        await fetch(`http://localhost:4000/api/data/${currentUserId}`, {
+        await fetch(`api/data/${currentUserId}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ todosByDate, messagesByDate })

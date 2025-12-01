@@ -76,7 +76,7 @@ export default function MyJournal() {
 
         setIsAiLoading(true);
         try {
-            const res = await fetch("http://localhost:4000/api/summary", {
+            const res = await fetch("api/summary", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ messages: userMsgs })
