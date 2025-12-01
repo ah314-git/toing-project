@@ -34,7 +34,7 @@ app.use(express.static(path.resolve('./dist')));
 
 
 // 4. SPA fallback (React 라우터용)
-app.get('/*', (req, res) => {
+app.get('/.*/', (req, res) => {
     res.sendFile(path.join(process.cwd(), 'dist', 'index.html'));
 });
 
