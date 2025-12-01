@@ -33,15 +33,12 @@ app.use('/api/summary', aiRoutes);
 app.use(express.static(path.resolve('./dist')));
 
 
-// SPA fallback (React 라우터용)
+// 4. SPA fallback (React 라우터용)
 app.get('*', (req, res) => {
     res.sendFile(path.join(process.cwd(), 'dist', 'index.html'));
 });
 
-// -----------------------------
-// 4. 404 처리
-// -----------------------------
-app.use((req, res) => res.status(404).json({ message: '경로를 찾을 수 없습니다.' }));
+
 
 // -----------------------------
 // 5. 서버 시작
