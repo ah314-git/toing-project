@@ -6,8 +6,8 @@ import "../css/MyJournal.css";
 export default function MyJournal() {
     const {
         selectedDate,
-        addMessage,
         messagesByDate,
+        addMessage,
         updateMessage,
         deleteMessage,
         timeFormat,
@@ -16,8 +16,9 @@ export default function MyJournal() {
         fontSize
     } = useAppStore();
 
-    const dateKey = toDay(selectedDate);
+    const dateKey = typeof selectedDate === "string" ? selectedDate : toDay(selectedDate);
     const list = messagesByDate?.[dateKey] || [];
+
 
     const [text, setText] = useState("");
     const [isAiLoading, setIsAiLoading] = useState(false);
@@ -33,28 +34,27 @@ export default function MyJournal() {
 
     useEffect(() => {
         const handleClickOutside = (e) => {
-            if (menu && !e.target.closest(".context-menu")) {
-                setMenu(null);
-            }
+            if (menu && !e.target.closest(".context-menu")) setMenu(null);
         };
         document.addEventListener("click", handleClickOutside);
         return () => document.removeEventListener("click", handleClickOutside);
     }, [menu]);
 
-    const sendMessage = () => {
+    const sendMessage = async () => {
         const value = text.trim();
         if (!value) return;
 
         if (editMessageId) {
-            updateMessage(dateKey, editMessageId, value);
+            await updateMessage(dateKey, editMessageId, value);
             setEditMessageId(null);
         } else {
-            addMessage(dateKey, {
+            const message = {
                 id: Date.now().toString(),
                 text: value,
                 time: new Date(),
                 type: "user"
-            });
+            };
+            await addMessage(dateKey, message);
         }
 
         setText("");
@@ -70,10 +70,7 @@ export default function MyJournal() {
 
     const handleAiSummary = async () => {
         const lastAiIndex = list.findLastIndex(m => m.type === "ai");
-        const messagesToSend = list
-            .slice(lastAiIndex + 1)
-            .filter(m => m.type === "user")
-            .map(m => m.text);
+        const messagesToSend = list.slice(lastAiIndex + 1).filter(m => m.type === "user").map(m => m.text);
         const userMsgs = messagesToSend.join("\n\n--- 분리 ---\n\n");
         if (!userMsgs) return;
 
@@ -84,14 +81,10 @@ export default function MyJournal() {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ messages: userMsgs })
             });
-
             const data = await res.json();
-            if (!res.ok) {
-                console.error("서버 응답 오류:", data.text || "응답 없음");
-                return;
-            }
+            if (!res.ok) console.error("서버 응답 오류:", data.text || "응답 없음");
 
-            addMessage(dateKey, {
+            await addMessage(dateKey, {
                 id: "ai-" + Date.now().toString(),
                 text: data.text || "AI가 응답을 생성하지 못했습니다.",
                 time: new Date(),
@@ -124,8 +117,8 @@ export default function MyJournal() {
         inputRef.current?.focus();
     };
 
-    const handleDelete = (id) => {
-        deleteMessage(dateKey, id);
+    const handleDelete = async (id) => {
+        await deleteMessage(dateKey, id);
         setMenu(null);
         if (editMessageId === id) {
             setEditMessageId(null);
@@ -146,25 +139,16 @@ export default function MyJournal() {
                             setMenu({ x: e.pageX, y: e.pageY, id: m.id, type: m.type, text: m.text });
                         }}
                     >
-                        {m.type === "user" && showTime && (
-                            <div className="time user-time">{formatTime(m.time)}</div>
-                        )}
+                        {m.type === "user" && showTime && <div className="time user-time">{formatTime(m.time)}</div>}
                         <div className={`bubble ${m.type}`}>{m.text}</div>
-                        {m.type === "ai" && showTime && (
-                            <div className="time ai-time">{formatTime(m.time)}</div>
-                        )}
+                        {m.type === "ai" && showTime && <div className="time ai-time">{formatTime(m.time)}</div>}
                     </div>
                 ))}
             </div>
 
             {menu && (
-                <div
-                    className="context-menu"
-                    style={{ top: menu.y, left: menu.x, fontFamily, fontSize }}
-                >
-                    {menu.type === "user" && (
-                        <div onClick={() => handleEdit(menu.id, menu.text)}>수정</div>
-                    )}
+                <div className="context-menu" style={{ top: menu.y, left: menu.x, fontFamily, fontSize }}>
+                    {menu.type === "user" && <div onClick={() => handleEdit(menu.id, menu.text)}>수정</div>}
                     <div onClick={() => handleDelete(menu.id)}>삭제</div>
                 </div>
             )}
@@ -180,20 +164,10 @@ export default function MyJournal() {
                     style={{ fontFamily, fontSize }}
                 />
                 <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                    <button
-                        className="btn secondary"
-                        onClick={handleAiSummary}
-                        disabled={isAiLoading}
-                        style={{ fontFamily, fontSize }}
-                    >
+                    <button className="btn secondary" onClick={handleAiSummary} disabled={isAiLoading} style={{ fontFamily, fontSize }}>
                         {isAiLoading ? "요약중..." : "AI 요약"}
                     </button>
-                    <button
-                        className="btn primary"
-                        onClick={sendMessage}
-                        disabled={text.trim().length === 0}
-                        style={{ fontFamily, fontSize }}
-                    >
+                    <button className="btn primary" onClick={sendMessage} disabled={text.trim().length === 0} style={{ fontFamily, fontSize }}>
                         {editMessageId ? "수정 완료" : "전송"}
                     </button>
                 </div>

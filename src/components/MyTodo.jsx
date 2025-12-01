@@ -10,6 +10,7 @@ export default function MyTodo() {
         toggleTodoDone,
         editTodo,
         deleteTodo,
+        setTodosForDate,
         fontFamily,
         fontSize
     } = useAppStore();
@@ -20,6 +21,7 @@ export default function MyTodo() {
     const [menu, setMenu] = useState(null);
     const [draggingId, setDraggingId] = useState(null);
     const inputRef = useRef(null);
+
     const list = todosByDate[selectedDate] || [];
 
     useEffect(() => {
@@ -29,14 +31,9 @@ export default function MyTodo() {
         setMenu(null);
     }, [selectedDate]);
 
-    const handleAdd = () => {
-        setIsAdding(true);
-        setTimeout(() => inputRef.current?.focus(), 0);
-    };
-
-    const handleAddEnter = (e) => {
+    const handleAddEnter = async (e) => {
         if (e.key === "Enter" && input.trim()) {
-            addTodo(selectedDate, input);
+            await addTodo(selectedDate, input);
             setInput("");
             setIsAdding(false);
         }
@@ -52,36 +49,29 @@ export default function MyTodo() {
         setMenu(null);
     };
 
-    const handleDelete = (id) => {
-        deleteTodo(selectedDate, id);
+    const handleDelete = async (id) => {
+        await deleteTodo(selectedDate, id);
         setMenu(null);
     };
 
-    useEffect(() => {
-        const handleClickOutside = (e) => {
-            const isMenu = e.target.closest(".context-menu");
-            const isInput = e.target.closest(".input-inline");
-            const isAddButton = e.target.closest(".add-button");
-            if (isMenu || isInput || isAddButton) return;
-            setMenu(null);
-            setIsAdding(false);
-        };
-        window.addEventListener("click", handleClickOutside);
-        return () => window.removeEventListener("click", handleClickOutside);
-    }, []);
-
-    const handleDragOver = (e, item) => {
+    const handleDragOver = async (e, item) => {
         e.preventDefault();
         if (draggingId === item.id) return;
 
         const newList = [...list];
-        const from = newList.findIndex((t) => t.id === draggingId);
-        const to = newList.findIndex((t) => t.id === item.id);
+        const from = newList.findIndex(t => t.id === draggingId);
+        const to = newList.findIndex(t => t.id === item.id);
 
         const moved = newList.splice(from, 1)[0];
         newList.splice(to, 0, moved);
 
-        useAppStore.getState().setTodosForDate(selectedDate, newList);
+        setTodosForDate(selectedDate, newList);
+        await useAppStore.getState().saveUserData();
+    };
+
+    const handleAdd = () => {
+        setIsAdding(true);
+        setTimeout(() => inputRef.current?.focus(), 0);
     };
 
     return (
@@ -107,17 +97,14 @@ export default function MyTodo() {
                                 fontFamily,
                                 fontSize
                             }}
-                            onClick={() => toggleTodoDone(selectedDate, item.id)}
+                            onClick={async () => { await toggleTodoDone(selectedDate, item.id); }}
                         >
                             <input
                                 type="checkbox"
                                 className="todo-checkbox"
                                 checked={item.done}
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    toggleTodoDone(selectedDate, item.id);
-                                }}
-                                onChange={() => { }}
+                                onClick={(e) => e.stopPropagation()}
+                                onChange={() => {}}
                                 style={{ fontFamily, fontSize }}
                             />
                             {editingId === item.id ? (
@@ -126,9 +113,9 @@ export default function MyTodo() {
                                     style={{ fontFamily, fontSize }}
                                     defaultValue={item.text}
                                     autoFocus
-                                    onKeyDown={(e) => {
+                                    onKeyDown={async (e) => {
                                         if (e.key === "Enter") {
-                                            editTodo(selectedDate, item.id, e.target.value);
+                                            await editTodo(selectedDate, item.id, e.target.value);
                                             setEditingId(null);
                                         }
                                     }}
@@ -164,12 +151,9 @@ export default function MyTodo() {
             </div>
 
             {menu && (
-                <div
-                    className="context-menu"
-                    style={{ top: menu.y, left: menu.x, fontFamily, fontSize }}
-                >
-                    <div style={{ fontFamily, fontSize }} onClick={() => handleEdit(menu.id)}>수정</div>
-                    <div style={{ fontFamily, fontSize }} onClick={() => handleDelete(menu.id)}>삭제</div>
+                <div className="context-menu" style={{ top: menu.y, left: menu.x, fontFamily, fontSize }}>
+                    <div onClick={() => handleEdit(menu.id)}>수정</div>
+                    <div onClick={() => handleDelete(menu.id)}>삭제</div>
                 </div>
             )}
         </div>

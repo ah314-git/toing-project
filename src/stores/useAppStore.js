@@ -1,13 +1,9 @@
-/* useAppStore.js */
-
-
 import { create } from "zustand";
 import { toDay } from "../utils/date";
 
 const today = toDay(new Date());
 
 export const useAppStore = create((set, get) => ({
-
     selectedDate: today,
     todosByDate: {},
     messagesByDate: {},
@@ -16,17 +12,22 @@ export const useAppStore = create((set, get) => ({
     currentUserId: null,
     currentUsername: null,
 
+    // -----------------------------
+    // 기본 액션
+    // -----------------------------
     setSelectedDate: (date) => set({ selectedDate: date }),
     toggleSettings: () => set((state) => ({ isSettingsOpen: !state.isSettingsOpen })),
     setCurrentMainView: (viewName) => set({ currentMainView: viewName }),
 
     login: async (userId, username) => {
+        const res = await fetch(`http://localhost:4000/api/data/${userId}`);
+        const data = await res.json();
         set(() => ({
             currentUserId: userId,
             currentUsername: username,
             currentMainView: 'Home',
-            todosByDate: {},
-            messagesByDate: {},
+            todosByDate: data.todosByDate || {},
+            messagesByDate: data.messagesByDate || {},
         }));
     },
 
@@ -38,109 +39,113 @@ export const useAppStore = create((set, get) => ({
         messagesByDate: {},
     })),
 
+    saveUserData: async () => {
+        const { currentUserId, todosByDate, messagesByDate } = get();
+        if (!currentUserId) return;
+
+        await fetch(`http://localhost:4000/api/data/${currentUserId}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ todosByDate, messagesByDate })
+        });
+    },
+
     // -----------------------------
-    // TODOLIST 액션
+    // TODOLIST 액션 (날짜별 관리)
     // -----------------------------
-    addTodo: (date, text) => {
-        const value = text?.trim();
-        if (!value) return;
+    addTodo: async (date, text) => {
+        if (!text?.trim()) return;
         const id = Date.now().toString();
 
-        set((state) => {
+        set(state => {
             const prev = state.todosByDate[date] || [];
-            const updated = [...prev, { id, text: value, done: false }];
-            return { todosByDate: { ...state.todosByDate, [date]: updated } };
+            return { todosByDate: { ...state.todosByDate, [date]: [...prev, { id, text: text.trim(), done: false }] } };
         });
+
+        await get().saveUserData();
     },
 
-    toggleTodoDone: (date, id) => {
-        set((state) => {
-            const updated = state.todosByDate[date]?.map(t =>
-                t.id === id ? { ...t, done: !t.done } : t
-            ) || [];
+    toggleTodoDone: async (date, id) => {
+        set(state => {
+            const updated = state.todosByDate[date]?.map(t => t.id === id ? { ...t, done: !t.done } : t) || [];
             return { todosByDate: { ...state.todosByDate, [date]: updated } };
         });
+
+        await get().saveUserData();
     },
 
-    editTodo: (date, id, newText) => {
-        set((state) => {
-            const updated = state.todosByDate[date]?.map(t =>
-                t.id === id ? { ...t, text: newText } : t
-            ) || [];
+    editTodo: async (date, id, newText) => {
+        set(state => {
+            const updated = state.todosByDate[date]?.map(t => t.id === id ? { ...t, text: newText } : t) || [];
             return { todosByDate: { ...state.todosByDate, [date]: updated } };
         });
+
+        await get().saveUserData();
     },
 
-    deleteTodo: (date, id) => {
-        set((state) => {
+    deleteTodo: async (date, id) => {
+        set(state => {
             const filtered = state.todosByDate[date]?.filter(t => t.id !== id) || [];
             const next = { ...state.todosByDate, [date]: filtered };
-
             if (filtered.length === 0) delete next[date];
-
             return { todosByDate: next };
         });
+
+        await get().saveUserData();
     },
 
-    setTodosForDate: (date, newList) => {
-        set((state) => ({
-            todosByDate: { ...state.todosByDate, [date]: newList }
-        }));
+    setTodosForDate: async (date, newList) => {
+        set(state => ({ todosByDate: { ...state.todosByDate, [date]: newList } }));
+        await get().saveUserData();
     },
 
     // -----------------------------
-    // JOURNAL 액션
+    // JOURNAL 액션 (날짜별 관리)
     // -----------------------------
-    setMessagesForDate: (date, newList) => {
-        set((state) => ({
+    setMessagesForDate: async (date, newList) => {
+        set(state => ({
             messagesByDate: { ...state.messagesByDate, [date]: newList }
         }));
+        await saveUserData();
     },
 
-    addMessage: (date, message) => {
-        set((state) => {
-            const prev = state.messagesByDate?.[date] || [];
-            const updated = [...prev, message];
+    addMessage: async (date, message) => {
+    set(state => {
+        const prev = state.messagesByDate[date] || [];
+        return {
+            messagesByDate: {
+                ...state.messagesByDate,
+                [date]: [...prev, message]
+            }
+        };
+    });
+
+    // DB에 날짜별 메시지 저장
+    await get().saveUserData();
+},
+
+
+    updateMessage: async (date, msgId, newText) => {
+        set(state => {
+            const messages = state.messagesByDate[date] || [];
+            const updated = messages.map(m => m.id === msgId ? { ...m, text: newText } : m);
             return { messagesByDate: { ...state.messagesByDate, [date]: updated } };
         });
+        await get().saveUserData();
     },
 
-    clearMessagesForDate: (date) => {
-        set((state) => {
-            const next = { ...state.messagesByDate };
-            delete next[date];
-            return { messagesByDate: next };
-        });
-    },
-
-    updateMessage: (dateKey, msgId, newText) => {
-        set((state) => {
-            const messages = state.messagesByDate?.[dateKey];
-            if (!messages) return {}; // 해당 날짜가 없으면 아무 것도 안함
-            const updated = messages.map(m => m.id === msgId ? { ...m, text: newText } : m);
-            return { messagesByDate: { ...state.messagesByDate, [dateKey]: updated } };
-        });
-    },
-
-    deleteMessage: (dateKey, msgId) => {
-        set((state) => {
-            const messages = state.messagesByDate?.[dateKey];
-            if (!messages) return {}; // 해당 날짜가 없으면 아무 것도 안함
+    deleteMessage: async (date, msgId) => {
+        set(state => {
+            const messages = state.messagesByDate[date] || [];
             const updated = messages.filter(m => m.id !== msgId);
-            return { messagesByDate: { ...state.messagesByDate, [dateKey]: updated } };
+            return { messagesByDate: { ...state.messagesByDate, [date]: updated } };
         });
+        await get().saveUserData();
     },
-
-
-
-
 
     // -----------------------------
     // SETTINGS 액션
     // -----------------------------
-
-
-    //기본 설정
     startWeekDay: '일요일',
     setStartWeekDay: (day) => set({ startWeekDay: day }),
 
@@ -150,38 +155,22 @@ export const useAppStore = create((set, get) => ({
     showTime: true,
     toggleShowTime: () => set((state) => ({ showTime: !state.showTime })),
 
+    theme: 'light',
+    toggleTheme: () => set((state) => ({ theme: state.theme === 'light' ? 'dark' : 'light' })),
 
-    //테마
-    toggleDarkMode: () => set((state) => ({ darkMode: !state.darkMode })),
-    theme: "light",
-    toggleTheme: () =>
-        set((state) => ({
-            theme: state.theme === "light" ? "dark" : "light"
-        })),
-
-
-
-    //글자 스타일
     fontFamily: 'Arial',
     fontList: ['Arial', '나눔고딕', '나눔손글씨장미체', '휴먼편지체'],
     setFontFamily: (font) => set({ fontFamily: font }),
     setNextFont: () => set((state) => {
         const currentIndex = state.fontList.indexOf(state.fontFamily);
-        const nextIndex = (currentIndex + 1) % state.fontList.length;
-        return { fontFamily: state.fontList[nextIndex] };
+        return { fontFamily: state.fontList[(currentIndex + 1) % state.fontList.length] };
     }),
 
-    fontSize: 16, // 기본 글씨 크기(px)
-    fontSizeList: [14, 16, 18, 20], // 순환할 글씨 크기 옵션
+    fontSize: 16,
+    fontSizeList: [14, 16, 18, 20],
     setFontSize: (size) => set({ fontSize: size }),
     setNextFontSize: () => set((state) => {
         const currentIndex = state.fontSizeList.indexOf(state.fontSize);
-        const nextIndex = (currentIndex + 1) % state.fontSizeList.length;
-        return { fontSize: state.fontSizeList[nextIndex] };
+        return { fontSize: state.fontSizeList[(currentIndex + 1) % state.fontSizeList.length] };
     }),
-
-
 }));
-
-
-

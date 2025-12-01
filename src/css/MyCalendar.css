@@ -11,6 +11,11 @@
     color: #fff !important;
 }
 
+.react-calendar__tile--active .calendar-dot {
+    background-color: #fff;
+}
+
+
 
 
 .calendar-wrapper {

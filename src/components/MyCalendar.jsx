@@ -24,14 +24,11 @@ export default function MyCalendar() {
 
     const tileContent = ({ date, view }) => {
         if (view !== "month") return null;
-
         const key = toDay(date);
         const todos = todosByDate[key];
-
         if (!todos || todos.length === 0) return null;
 
         const dotCount = Math.min(todos.length, 3);
-
         return (
             <div className="calendar-dot-wrapper">
                 {Array.from({ length: dotCount }).map((_, i) => (
@@ -43,33 +40,19 @@ export default function MyCalendar() {
 
     return (
         <div className="calendar-wrapper" style={{ fontFamily }}>
-            {/* 커스텀 헤더 */}
             <div className="calendar-header">
                 <div className="calendar-year-text">{year}</div>
                 <div className="calendar-month-row">
-                    <button
-                        className="calendar-arrow"
-                        onClick={() => changeMonth(-1)}
-                        aria-label="이전 달"
-                        style={{ fontFamily }}
-                    >
+                    <button className="calendar-arrow" onClick={() => changeMonth(-1)} aria-label="이전 달" style={{ fontFamily }}>
                         {"<"}
                     </button>
-                    <div className="calendar-month-text" style={{ fontFamily }}>
-                        {month}월
-                    </div>
-                    <button
-                        className="calendar-arrow"
-                        onClick={() => changeMonth(1)}
-                        aria-label="다음 달"
-                        style={{ fontFamily }}
-                    >
+                    <div className="calendar-month-text" style={{ fontFamily }}>{month}월</div>
+                    <button className="calendar-arrow" onClick={() => changeMonth(1)} aria-label="다음 달" style={{ fontFamily }}>
                         {">"}
                     </button>
                 </div>
             </div>
 
-            {/* 캘린더 */}
             <Calendar
                 onChange={(date) => setSelectedDate(toDay(date))}
                 value={dateObj}
