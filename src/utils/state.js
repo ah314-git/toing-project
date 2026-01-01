@@ -59,10 +59,3 @@ export const clearMessagesForDate = (messagesByDate, date) => {
 };
 
 
-
-
-
-// -----------------------------
-// SETTINGS 액션
-// -----------------------------
-

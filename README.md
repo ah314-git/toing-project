@@ -1,16 +1,72 @@
-# React + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+# TOING-일정관리 웹
 
-Currently, two official plugins are available:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### 📈 프로젝트 소개
+> 리액트와 Vite를 활용하여 투두, 캘린더, 저널 기능이 포함되어 있는 일정 관리 웹페이지를 구현한 개인 프로젝트입니다. 일정 데이터를 서버와 API를 통해 관리하며 일부 콘텐츠에 AI 요약 기능을 적용하여
+사용자 편의성을 높이고자 했습니다.
+프론트엔드 컴포넌트 구조 설계와 서버 통신 흐름을 이해하는 것을 목표로 진행하였습니다.  
+🔗 **Repository** : https://github.com/ah314-git/toing-project  
+🔗 **Live Demo** : https://toing-project.onrender.com/
 
-## React Compiler
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### 📈사용 기술
 
-## Expanding the ESLint configuration
+* Language: HTML5, CSS3, JavaScript (ES6+)
+* Library: React, Vite
+* Deployment: Render
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+
+
+### 📈핵심 구현 포인트
+
+**1. MyCalendar**
+
+* **전역 상태 연동** : Zustand 전역 상태와 연동하여 선택된 날짜와 할 일 데이터를 실시간으로 동기화했습니다.
+
+* **할 일 인디케이터 시각화** : react-calendar의 tileContent를 활용하여 날짜별 할 일 존재 여부를 Dot 형태로 표시하였으며, 최대 3개까지 노출되도록 제한했습니다.
+
+* **개인화 설정 반영** : 유저 설정에 따라 폰트 스타일과 캘린더 시작 요일을 동적으로 변경할 수 있도록 구현했습니다.
+
+* **성능 최적화 및 UI 커스터마이징** : useMemo를 활용해 날짜 객체 생성을 최적화하고 커스텀 캘린더 헤더를 구현했습니다.
+
+**2. MyTodo**
+
+* **드래그 앤 드롭 기능** : 할 일 항목의 순서를 자유롭게 변경할 수 있도록 구현하고 변경 사항이 유지되도록 서버에 저장했습니다.
+
+* **컨텍스트 메뉴** : 마우스 우클릭 시 수정 및 삭제가 가능한 컨텍스트 메뉴를 제공해 앱과 유사한 사용자 경험을 구현하였습니다.
+
+
+**3. MyJournal**
+
+* **채팅형 인터페이스** : 대화형 UI를 적용해 일기 작성에 대한 심리적 부담을 낮추고 자동 스크롤링으로 사용 편의성을 높였습니다.
+
+* **AI 요약 기능** : AI API와 연동하여 작성된 기록을 분석하고 요약본을 자동으로 생성하는 기능을 구현하였습니다.
+
+* **전역 설정 연동**
+시간 포맷과 폰트 등 전역 설정 상태와 연동해 사용자 선호에 따른 UI가 실시간으로 반영되도록 구성했습니다.
+
+**4. Login & Register**
+
+* **실시간 유효성 검사**
+정규표현식을 활용하여 아이디와 비밀번호 조건을 실시간으로 검증하고 즉각적인 피드백을 제공했습니다.
+
+* **회원가입 로직**
+아이디 중복 확인, 비밀번호 일치 여부, 필수 약관 동의가 모두 충족될 경우에만 가입이 가능하도록 설계했습니다.
+
+* **비동기 인증 처리**
+fetch API와 환경 변수를 활용해 RESTful API 통신을 구성하고 인증 과정에서 발생하는 에러를 처리했습니다.
+
+
+
+
+
+### 💡향후계획
+
+**캘린더 동기화 기능 확장:**
+실제 스마트폰 캘린더와 연동하는 기능을 구현하여
+웹과 모바일 환경 간의 일정 관리 연속성을 강화할 계획입니다.
+
+**모바일 반응형 UI 개선:**
+다양한 화면 크기에서도 안정적인 사용이 가능하도록
+레이아웃과 인터랙션을 개선해 모바일 환경에 최적화된 UI를 적용할 예정입니다.
